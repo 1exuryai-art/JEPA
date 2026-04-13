@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rezerwacja online</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --bg: #0a0a0a;
+      --panel: rgba(255,255,255,0.06);
+      --line: rgba(255,255,255,0.14);
+      --text: #f6f6f6;
+      --muted: #b8b8b8;
+      --soft: #8a8a8a;
+      --error: #ffb0b0;
+      --success: #d9ffd9;
+      --shadow: 0 20px 80px rgba(0,0,0,0.45);
+      --transition: 240ms ease;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.08), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,0.06), transparent 28%),
+        linear-gradient(135deg, #050505 0%, #101010 40%, #050505 100%);
+      padding: 32px 16px;
+    }
+
+    .shell {
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    .app {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+      backdrop-filter: blur(18px);
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .eyebrow {
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      font-weight: 700;
+    }
+
+    h2 {
+      font-size: clamp(22px, 3vw, 30px);
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+      font-weight: 600;
+    }
+
+    .lead {
+      margin-top: 12px;
+      color: var(--muted);
+      max-width: 620px;
+      line-height: 1.6;
+    }
+
+    .step-indicator {
+      padding: 12px 16px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .scene-note,
+    .summary-box,
+    .service-card,
+    .calendar-box,
+    .slots-box,
+    .success-box,
+    .ui-block,
+    .review-item,
+    .notice {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      border-radius: 24px;
+      padding: 18px;
+      backdrop-filter: blur(10px);
+    }
+
+    .scene-note,
+    .notice {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .hidden { display: none !important; }
+
+    .step {
+      display: none;
+      flex-direction: column;
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .step.active { display: flex; }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    input, button {
+      min-height: 52px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      font-size: 15px;
+      transition: var(--transition);
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.98);
+      color: #111;
+      outline: none;
+    }
+
+    button {
+      border: 1px solid rgba(255,255,255,0.16);
+      padding: 12px 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(220,220,220,0.94));
+      color: #0b0b0b;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    button[disabled] {
+      opacity: .42;
+      cursor: not-allowed;
+    }
+
+    .ghost-btn {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .error {
+      min-height: 18px;
+      color: var(--error);
+      font-size: 13px;
+    }
+
+    .success-text { color: var(--success); }
+    .muted { color: var(--muted); }
+    .soft { color: var(--soft); }
+
+    .summary-box,
+    .service-meta {
+      display: grid;
+      gap: 10px;
+    }
+
+    .service-groups {
+      display: grid;
+      gap: 16px;
+    }
+
+    .group-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .group-note {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .service-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .service-option {
+      width: 100%;
+      text-align: left;
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      border-color: rgba(255,255,255,0.1);
+    }
+
+    .service-option.selected,
+    .date-btn.selected,
+    .slot-btn.selected {
+      background: linear-gradient(180deg, rgba(255,255,255,1), rgba(214,214,214,0.96));
+      color: #111;
+      border-color: rgba(255,255,255,0.5);
+    }
+
+    .service-option small {
+      display: block;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    .service-option.selected small {
+      color: rgba(0,0,0,0.72);
+    }
+
+    .calendar-grid,
+    .slots-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .date-btn,
+    .slot-btn {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border-color: rgba(255,255,255,0.1);
+    }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .review-item strong {
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.68);
+      backdrop-filter: blur(8px);
+      z-index: 20;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      width: 100%;
+      max-width: 560px;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: linear-gradient(180deg, rgba(20,20,20,0.98), rgba(11,11,11,0.95));
+      color: var(--text);
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .list-clean {
+      margin: 12px 0 0;
+      padding-left: 18px;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 720px) {
+      .app { padding: 20px; border-radius: 24px; }
+      .topbar { flex-direction: column; }
+      .review-grid { grid-template-columns: 1fr; }
+      .actions > * { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <main class="app">
+      <div class="topbar">
+        <div>
+          <div class="eyebrow">rezerwacja online</div>
+          <h1>Cyfrowa rezerwacja<br />w estetyce black & white</h1>
+          <p class="lead">
+            Formularz prowadzi użytkownika krok po kroku, zapisuje dane,
+            automatycznie pobiera dostępne terminy i przygotowuje rezerwację do wysłania na serwer.
+          </p>
+        </div>
+        <div class="step-indicator" id="stepIndicator">Krok 1 z 7</div>
+      </div>
+
+      <div class="scene-note">
+        Finalniejszy kierunek: cinematic minimalism, miękkie szkło, kontrast światła i cienia,
+        gotowa logika pod automatyczne terminy. Без твоих картинок и PNG.
+      </div>
+
+      <section class="step active" data-step="1">
+        <h2>[Krok 1/7] Dane kontaktowe</h2>
+        <p class="muted">Cześć 👋 Zarezerwuj wizytę w 1 minutę.</p>
+
+        <label>
+          Imię
+          <input id="nameInput" type="text" placeholder="Wpisz imię" autocomplete="name" />
+          <span class="error" id="nameError"></span>
+        </label>
+
+        <label>
+          Numer telefonu
+          <input id="phoneInput" type="tel" placeholder="+48 123 456 789" autocomplete="tel" />
+          <span class="error" id="phoneError"></span>
+        </label>
+
+        <div class="actions">
+          <button id="step1Next" disabled>Przejdź do rezerwacji</button>
+        </div>
+      </section>
+
+      <section class="step" data-step="2">
+        <h2>[Krok 2/7] Wybór usługi</h2>
+
+        <div class="summary-box">
+          <p><strong>Imię:</strong> <span data-bind="name">—</span></p>
+          <p><strong>Telefon:</strong> <span data-bind="phone">—</span></p>
+        </div>
+
+        <div class="service-groups">
+          <div class="ui-block">
+            <div class="group-title">Młodszy Barber</div>
+            <div class="group-note">4 usługi</div>
+            <div class="service-list" id="juniorServiceList"></div>
+          </div>
+
+          <div class="ui-block">
+            <div class="group-title">Strzyżenie, golenie</div>
+            <div class="group-note">12 usług</div>
+            <div class="service-list" id="mainServiceList"></div>
+          </div>
+
+          <div class="ui-block">
+            <div class="group-title">COMBO</div>
+            <div class="group-note">8 usług</div>
+            <div class="service-list" id="comboServiceList"></div>
+          </div>
+
+          <div class="ui-block">
+            <div class="group-title">Odsiwianie</div>
+            <div class="group-note">2 usługi</div>
+            <div class="service-list" id="greyServiceList"></div>
+          </div>
+        </div>
+
+        <div class="service-card hidden" id="selectedServiceCard">
+          <p><strong>Wybrana usługa:</strong> <span data-bind="serviceName">—</span></p>
+          <div class="actions">
+            <button type="button" id="openPriceModal" class="ghost-btn">Cennik</button>
+            <button type="button" id="step2Next" disabled>Dalej</button>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="back-btn ghost-btn">Wstecz</button>
+        </div>
+      </section>
+
+      <section class="step" data-step="3">
+        <h2>[Krok 3/7] Potwierdzenie usługi</h2>
+
+        <div class="service-card service-meta">
+          <p><strong>Nazwa:</strong> <span data-bind="serviceName">—</span></p>
+          <p><strong>Czas:</strong> <span data-bind="durationText">—</span></p>
+          <p><strong>Cena:</strong> <span data-bind="priceText">—</span></p>
+        </div>
+
+        <div class="notice">
+          Po przejściu dalej formularz automatycznie pobierze dostępne daty dla tej usługi.
+        </div>
+
+        <div class="actions">
+          <button type="button" id="changeServiceBtn" class="ghost-btn">Zmień usługę</button>
+          <button type="button" id="step3Next">Dalej</button>
+        </div>
+      </section>
+
+      <section class="step" data-step="4">
+        <h2>[Krok 4/7] Wybór daty</h2>
+
+        <div class="calendar-box">
+          <div class="actions" style="margin-top: 0; margin-bottom: 8px;">
+            <span class="pill" id="monthLabel">Kwiecień 2026</span>
+            <span class="pill" id="availabilityStatus">Ładowanie dat...</span>
+          </div>
+          <div class="calendar-grid" id="calendarGrid"></div>
+          <div class="error" id="dateError"></div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="back-btn ghost-btn">Wstecz</button>
+          <button type="button" id="step4Next" disabled>Dalej</button>
+        </div>
+      </section>
+
+      <section class="step" data-step="5">
+        <h2>[Krok 5/7] Wybór godziny</h2>
+
+        <div class="slots-box">
+          <div class="actions" style="margin-top: 0; margin-bottom: 8px;">
+            <span class="pill">Wybrana data: <span data-bind="dateText">—</span></span>
+            <span class="pill" id="slotsStatus">Wybierz datę</span>
+          </div>
+
+          <div class="slots-grid" id="slotsGrid"></div>
+          <div class="error" id="timeError"></div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="back-btn ghost-btn">Wstecz</button>
+          <button type="button" id="step5Next" disabled>Dalej</button>
+        </div>
+      </section>
+
+      <section class="step" data-step="6">
+        <h2>[Krok 6/7] Potwierdzenie rezerwacji</h2>
+
+        <div class="review-grid">
+          <div class="review-item"><strong>Imię</strong><br /><span data-bind="name">—</span></div>
+          <div class="review-item"><strong>Telefon</strong><br /><span data-bind="phone">—</span></div>
+          <div class="review-item"><strong>Usługa</strong><br /><span data-bind="serviceName">—</span></div>
+          <div class="review-item"><strong>Cena</strong><br /><span data-bind="priceText">—</span></div>
+          <div class="review-item"><strong>Czas</strong><br /><span data-bind="durationText">—</span></div>
+          <div class="review-item"><strong>Data</strong><br /><span data-bind="dateText">—</span></div>
+          <div class="review-item"><strong>Godzina</strong><br /><span data-bind="time">—</span></div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="back-btn ghost-btn">Wstecz</button>
+          <button type="button" id="confirmBookingBtn">Potwierdź rezerwację</button>
+        </div>
+
+        <div class="error" id="submitError"></div>
+      </section>
+
+      <section class="step" data-step="7">
+        <h2>[Krok 7/7] Gotowe</h2>
+
+        <div class="success-box">
+          <p class="success-text"><strong>Rezerwacja została przyjęta ✅</strong></p>
+          <br />
+          <p><strong>Usługa:</strong> <span data-bind="serviceName">—</span></p>
+          <p><strong>Data:</strong> <span data-bind="dateText">—</span></p>
+          <p><strong>Godzina:</strong> <span data-bind="time">—</span></p>
+        </div>
+
+        <div class="actions">
+          <button type="button" id="instagramBtn">Wróć na Instagram</button>
+          <button type="button" id="contactBtn" class="ghost-btn">Skontaktuj się</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="priceModalBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="priceModalTitle">
+      <h3 id="priceModalTitle">Cennik</h3>
+      <ul class="list-clean" id="priceModalList">
+        <li>Brak danych</li>
+      </ul>
+      <div class="actions">
+        <button type="button" id="closePriceModal" class="ghost-btn">Zamknij</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = "http://localhost:3000";
+    const INSTAGRAM_URL = "https://instagram.com/";
+    const CONTACT_PHONE = "+48123456789";
+
+    const state = {
+      step: 1,
+      name: "",
+      phone: "",
+      serviceName: "",
+      price: null,
+      duration: null,
+      date: "",
+      time: "",
+      availableDates: [],
+      availableSlots: [],
+      loadingDates: false,
+      loadingSlots: false,
+      submitting: false
+    };
+
+    const services = [
+      { category: "Młodszy Barber", name: "Strzyżenie włosów (krótka forma)", price: 80, duration: 60 },
+      { category: "Młodszy Barber", name: "Strzyżenie maszynką (jedna długość)", price: 70, duration: 60 },
+      { category: "Młodszy Barber", name: "Strzyżenie włosów + brody (krótka forma)", price: 120, duration: 105 },
+      { category: "Młodszy Barber", name: "Strzyżenie brody (krótka forma)", price: 60, duration: 50 },
+
+      { category: "Strzyżenie, golenie", name: "Strzyżenie włosów (Liuda)", price: 100, duration: 35 },
+      { category: "Strzyżenie, golenie", name: "Strzyżenie włosów (Jenia)", price: 100, duration: 45 },
+      { category: "Strzyżenie, golenie", name: "Strzyżenie włosów (Daniil)", price: 100, duration: 45 },
+      { category: "Strzyżenie, golenie", name: "Strzyżenie włosów (Mirosława)", price: 100, duration: 30 },
+      { category: "Strzyżenie, golenie", name: "Strzyżenie włosów długich", price: 120, duration: 60 },
+      { category: "Strzyżenie, golenie", name: "Strzyżenie dziecka krótkie włosy (6-12 lat)", price: 80, duration: 30 },
+      { category: "Strzyżenie, golenie", name: "Strzyżenie dziecka długie włosy (6-12 lat)", price: 95, duration: 60 },
+      { category: "Strzyżenie, golenie", name: "Strzyżenie maszynką (jedna długość)", price: 80, duration: 30 },
+      { category: "Strzyżenie, golenie", name: "Strzyżenie włosów + HAIR TATTOO", price: 110, duration: 60 },
+      { category: "Strzyżenie, golenie", name: "Modelowanie brody", price: 90, duration: 30 },
+      { category: "Strzyżenie, golenie", name: "Strzyżenie brody", price: 80, duration: 30 },
+      { category: "Strzyżenie, golenie", name: "Golenie brzytwą na gładko", price: 90, duration: 60 },
+
+      { category: "COMBO", name: "Strzyżenie włosów + modelowanie brody", price: 150, duration: 60 },
+      { category: "COMBO", name: "Strzyżenie włosów + brody", price: 140, duration: 60 },
+      { category: "COMBO", name: "Pakiet COMBO premium", price: 160, duration: 60 },
+      { category: "COMBO", name: "Strzyżenie włosów długich + modelowanie brody", price: 170, duration: 75 },
+      { category: "COMBO", name: "Ojciec i syn (dzieci 6-12 lat)", price: 160, duration: 60 },
+      { category: "COMBO", name: "Strzyżenie + odsiwianie włosów i brody", price: 250, duration: 90 },
+      { category: "COMBO", name: "Strzyżenie włosów + odsiwianie", price: 160, duration: 60 },
+      { category: "COMBO", name: "Modelowanie brody + odsiwianie", price: 140, duration: 60 },
+
+      { category: "Odsiwianie", name: "Odsiwianie włosów", price: 90, duration: 30 },
+      { category: "Odsiwianie", name: "Odsiwianie brody", price: 90, duration: 30 }
+    ];
+
+    const stepIndicator = document.getElementById("stepIndicator");
+    const steps = [...document.querySelectorAll(".step")];
+    const nameInput = document.getElementById("nameInput");
+    const phoneInput = document.getElementById("phoneInput");
+    const nameError = document.getElementById("nameError");
+    const phoneError = document.getElementById("phoneError");
+    const step1Next = document.getElementById("step1Next");
+    const selectedServiceCard = document.getElementById("selectedServiceCard");
+    const step2Next = document.getElementById("step2Next");
+    const step4Next = document.getElementById("step4Next");
+    const step5Next = document.getElementById("step5Next");
+    const changeServiceBtn = document.getElementById("changeServiceBtn");
+    const dateError = document.getElementById("dateError");
+    const timeError = document.getElementById("timeError");
+    const submitError = document.getElementById("submitError");
+    const calendarGrid = document.getElementById("calendarGrid");
+    const slotsGrid = document.getElementById("slotsGrid");
+    const priceModalBackdrop = document.getElementById("priceModalBackdrop");
+    const priceModalList = document.getElementById("priceModalList");
+    const availabilityStatus = document.getElementById("availabilityStatus");
+    const slotsStatus = document.getElementById("slotsStatus");
+    const monthLabel = document.getElementById("monthLabel");
+    const confirmBookingBtn = document.getElementById("confirmBookingBtn");
+
+    function formatPhone(rawValue) {
+      const digits = rawValue.replace(/\D/g, "");
+      if (digits.startsWith("48")) {
+        return "+48 " + digits.slice(2, 11).replace(/(\d{3})(\d{0,3})(\d{0,3})/, (_, a, b, c) => [a, b, c].filter(Boolean).join(" "));
+      }
+      return "+48 " + digits.slice(0, 9).replace(/(\d{3})(\d{0,3})(\d{0,3})/, (_, a, b, c) => [a, b, c].filter(Boolean).join(" "));
+    }
+
+    function isValidName(value) {
+      return value.trim().length > 0;
+    }
+
+    function isValidPhone(value) {
+      return /^\+48\s?\d{3}\s?\d{3}\s?\d{3}$/.test(value.trim());
+    }
+
+    function formatPrice(price) {
+      if (price == null) return "—";
+      return `${price.toFixed(2).replace(".", ",")} zł`;
+    }
+
+    function formatDuration(minutes) {
+      if (!minutes) return "—";
+      const h = Math.floor(minutes / 60);
+      const m = minutes % 60;
+      if (h && m) return `${h}g ${m}min`;
+      if (h) return `${h}g`;
+      return `${m}min`;
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return "—";
+      const [year, month, day] = dateString.split("-");
+      return `${day}.${month}.${year}`;
+    }
+
+    function getPolishMonth(monthNumber) {
+      const months = [
+        "Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec",
+        "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"
+      ];
+      return months[monthNumber - 1] || "Miesiąc";
+    }
+
+    function renderBindings() {
+      document.querySelectorAll('[data-bind="name"]').forEach(el => el.textContent = state.name || "—");
+      document.querySelectorAll('[data-bind="phone"]').forEach(el => el.textContent = state.phone || "—");
+      document.querySelectorAll('[data-bind="serviceName"]').forEach(el => el.textContent = state.serviceName || "—");
+      document.querySelectorAll('[data-bind="priceText"]').forEach(el => el.textContent = formatPrice(state.price));
+      document.querySelectorAll('[data-bind="durationText"]').forEach(el => el.textContent = formatDuration(state.duration));
+      document.querySelectorAll('[data-bind="dateText"]').forEach(el => el.textContent = formatDate(state.date));
+      document.querySelectorAll('[data-bind="time"]').forEach(el => el.textContent = state.time || "—");
+    }
+
+    function goToStep(step) {
+      state.step = step;
+      steps.forEach(section => {
+        section.classList.toggle("active", Number(section.dataset.step) === step);
+      });
+      stepIndicator.textContent = `Krok ${step} z 7`;
+      renderBindings();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function updateStepButtons() {
+      const validStep1 = isValidName(state.name) && isValidPhone(state.phone);
+      step1Next.disabled = !validStep1;
+
+      const hasService = Boolean(state.serviceName);
+      selectedServiceCard.classList.toggle("hidden", !hasService);
+      step2Next.disabled = !hasService;
+
+      step4Next.disabled = !Boolean(state.date) || state.loadingDates;
+      step5Next.disabled = !Boolean(state.time) || state.loadingSlots;
+      confirmBookingBtn.disabled = state.submitting;
+
+      availabilityStatus.textContent = state.loadingDates
+        ? "Ładowanie dat..."
+        : state.availableDates.length
+          ? `${state.availableDates.length} dostępnych dni`
+          : "Brak terminów";
+
+      slotsStatus.textContent = state.loadingSlots
+        ? "Ładowanie godzin..."
+        : state.date
+          ? state.availableSlots.length
+            ? `${state.availableSlots.length} wolnych godzin`
+            : "Brak godzin"
+          : "Wybierz datę";
+    }
+
+    function validateStep1(showErrors = false) {
+      const validName = isValidName(state.name);
+      const validPhone = isValidPhone(state.phone);
+
+      if (showErrors) {
+        nameError.textContent = validName ? "" : "Wpisz imię";
+        phoneError.textContent = validPhone ? "" : "Podaj poprawny numer telefonu";
+      }
+
+      return validName && validPhone;
+    }
+
+    function updatePriceModal() {
+      const visibleServices = state.serviceName
+        ? services.filter(service => service.name === state.serviceName)
+        : services.slice(0, 3);
+
+      priceModalList.innerHTML = visibleServices.map(service => (
+        `<li>${service.name} — ${formatPrice(service.price)} (${formatDuration(service.duration)})</li>`
+      )).join("");
+    }
+
+    function renderServiceButtons() {
+      const groups = {
+        "Młodszy Barber": document.getElementById("juniorServiceList"),
+        "Strzyżenie, golenie": document.getElementById("mainServiceList"),
+        "COMBO": document.getElementById("comboServiceList"),
+        "Odsiwianie": document.getElementById("greyServiceList")
+      };
+
+      Object.values(groups).forEach(container => container.innerHTML = "");
+
+      services.forEach(service => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "service-option";
+        btn.innerHTML = `
+          <strong>${service.name}</strong>
+          <small>${formatPrice(service.price)} • ${formatDuration(service.duration)}</small>
+        `;
+
+        if (state.serviceName === service.name) {
+          btn.classList.add("selected");
+        }
+
+        btn.addEventListener("click", () => {
+          const previousService = state.serviceName;
+          state.serviceName = service.name;
+          state.price = service.price;
+          state.duration = service.duration;
+
+          if (previousService !== service.name) {
+            resetAvailabilityState();
+          }
+
+          renderServiceButtons();
+          renderBindings();
+          updatePriceModal();
+          updateStepButtons();
+        });
+
+        groups[service.category].appendChild(btn);
+      });
+    }
+
+    function resetAvailabilityState() {
+      state.date = "";
+      state.time = "";
+      state.availableDates = [];
+      state.availableSlots = [];
+      renderCalendar();
+      renderSlots();
+      updateStepButtons();
+    }
+
+    function renderCalendar() {
+      calendarGrid.innerHTML = "";
+
+      if (state.loadingDates) {
+        calendarGrid.innerHTML = "<div class='soft'>Pobieranie dostępnych dat...</div>";
+        return;
+      }
+
+      if (!state.availableDates.length) {
+        calendarGrid.innerHTML = "<div class='soft'>Brak dostępnych dni dla tej usługi.</div>";
+        return;
+      }
+
+      const uniqueDates = [...new Set(state.availableDates)].sort();
+      const monthSample = uniqueDates[0];
+      if (monthSample) {
+        const [year, month] = monthSample.split("-");
+        monthLabel.textContent = `${getPolishMonth(Number(month))} ${year}`;
+      }
+
+      uniqueDates.forEach(date => {
+        const [, , day] = date.split("-");
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "date-btn";
+        btn.textContent = day;
+
+        if (state.date === date) {
+          btn.classList.add("selected");
+        }
+
+        btn.addEventListener("click", async () => {
+          state.date = date;
+          state.time = "";
+          dateError.textContent = "";
+          renderCalendar();
+          renderBindings();
+          updateStepButtons();
+          await fetchSlots();
+        });
+
+        calendarGrid.appendChild(btn);
+      });
+    }
+
+    function renderSlots() {
+      slotsGrid.innerHTML = "";
+
+      if (state.loadingSlots) {
+        slotsGrid.innerHTML = "<div class='soft'>Pobieranie wolnych godzin...</div>";
+        return;
+      }
+
+      if (!state.date) {
+        slotsGrid.innerHTML = "<div class='soft'>Najpierw wybierz datę.</div>";
+        return;
+      }
+
+      if (!state.availableSlots.length) {
+        slotsGrid.innerHTML = "<div class='soft'>Brak wolnych godzin dla wybranego dnia.</div>";
+        return;
+      }
+
+      state.availableSlots.forEach(slot => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "slot-btn";
+        btn.textContent = slot;
+
+        if (state.time === slot) {
+          btn.classList.add("selected");
+        }
+
+        btn.addEventListener("click", () => {
+          state.time = slot;
+          timeError.textContent = "";
+          renderSlots();
+          renderBindings();
+          updateStepButtons();
+        });
+
+        slotsGrid.appendChild(btn);
+      });
+    }
+
+    async function fetchAvailability() {
+      if (!state.serviceName) return;
+
+      state.loadingDates = true;
+      state.availableDates = [];
+      state.date = "";
+      state.time = "";
+      state.availableSlots = [];
+      renderCalendar();
+      renderSlots();
+      updateStepButtons();
+
+      const params = new URLSearchParams({
+        serviceName: state.serviceName,
+        duration: String(state.duration)
+      });
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/availability?${params.toString()}`);
+        if (!response.ok) throw new Error("Nie udało się pobrać dostępnych dat");
+        const data = await response.json();
+        state.availableDates = Array.isArray(data.availableDates) ? data.availableDates : [];
+      } catch (error) {
+        console.error(error);
+        dateError.textContent = "Nie udało się pobrać dostępnych dat.";
+      } finally {
+        state.loadingDates = false;
+        renderCalendar();
+        renderSlots();
+        updateStepButtons();
+      }
+    }
+
+    async function fetchSlots() {
+      if (!state.serviceName || !state.date || !state.duration) return;
+
+      state.loadingSlots = true;
+      state.availableSlots = [];
+      state.time = "";
+      renderSlots();
+      updateStepButtons();
+
+      const params = new URLSearchParams({
+        serviceName: state.serviceName,
+        date: state.date,
+        duration: String(state.duration)
+      });
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/availability/slots?${params.toString()}`);
+        if (!response.ok) throw new Error("Nie udało się pobrać godzin");
+        const data = await response.json();
+        state.availableSlots = Array.isArray(data.availableSlots) ? data.availableSlots : [];
+      } catch (error) {
+        console.error(error);
+        timeError.textContent = "Nie udało się pobrać wolnych godzin.";
+      } finally {
+        state.loadingSlots = false;
+        renderSlots();
+        updateStepButtons();
+      }
+    }
+
+    async function submitBooking() {
+      submitError.textContent = "";
+      state.submitting = true;
+      updateStepButtons();
+      confirmBookingBtn.textContent = "Wysyłanie...";
+
+      const payload = {
+        name: state.name,
+        phone: state.phone.replace(/\s/g, ""),
+        service: state.serviceName,
+        price: state.price,
+        duration: state.duration,
+        date: state.date,
+        time: state.time
+      };
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/bookings`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json().catch(() => null);
+
+        if (!response.ok || !data?.ok) {
+          throw new Error(data?.message || "Błąd serwera");
+        }
+
+        goToStep(7);
+      } catch (error) {
+        console.error(error);
+        submitError.textContent = error.message || "Nie udało się wysłać rezerwacji. Spróbuj ponownie.";
+      } finally {
+        state.submitting = false;
+        confirmBookingBtn.textContent = "Potwierdź rezerwację";
+        updateStepButtons();
+      }
+    }
+
+    nameInput.addEventListener("input", (e) => {
+      state.name = e.target.value;
+      validateStep1(true);
+      renderBindings();
+      updateStepButtons();
+    });
+
+    phoneInput.addEventListener("input", (e) => {
+      const formatted = formatPhone(e.target.value);
+      e.target.value = formatted;
+      state.phone = formatted;
+      validateStep1(true);
+      renderBindings();
+      updateStepButtons();
+    });
+
+    step1Next.addEventListener("click", () => {
+      if (!validateStep1(true)) return;
+      goToStep(2);
+    });
+
+    step2Next.addEventListener("click", () => {
+      if (!state.serviceName) return;
+      goToStep(3);
+    });
+
+    document.getElementById("step3Next").addEventListener("click", async () => {
+      goToStep(4);
+      await fetchAvailability();
+    });
+
+    document.getElementById("step4Next").addEventListener("click", () => {
+      if (!state.date) {
+        dateError.textContent = "Wybierz datę";
+        return;
+      }
+      goToStep(5);
+    });
+
+    document.getElementById("step5Next").addEventListener("click", () => {
+      if (!state.time) {
+        timeError.textContent = "Wybierz godzinę";
+        return;
+      }
+      goToStep(6);
+    });
+
+    document.getElementById("confirmBookingBtn").addEventListener("click", submitBooking);
+
+    changeServiceBtn.addEventListener("click", () => {
+      goToStep(2);
+    });
+
+    document.querySelectorAll(".back-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        goToStep(Math.max(1, state.step - 1));
+      });
+    });
+
+    document.getElementById("openPriceModal").addEventListener("click", () => {
+      updatePriceModal();
+      priceModalBackdrop.classList.add("open");
+      priceModalBackdrop.setAttribute("aria-hidden", "false");
+    });
+
+    document.getElementById("closePriceModal").addEventListener("click", closePriceModal);
+    priceModalBackdrop.addEventListener("click", (e) => {
+      if (e.target === priceModalBackdrop) closePriceModal();
+    });
+
+    function closePriceModal() {
+      priceModalBackdrop.classList.remove("open");
+      priceModalBackdrop.setAttribute("aria-hidden", "true");
+    }
+
+    document.getElementById("instagramBtn").addEventListener("click", () => {
+      window.location.href = INSTAGRAM_URL;
+    });
+
+    document.getElementById("contactBtn").addEventListener("click", () => {
+      window.location.href = `tel:${CONTACT_PHONE}`;
+    });
+
+    renderServiceButtons();
+    renderCalendar();
+    renderSlots();
+    renderBindings();
+    updateStepButtons();
+  </script>
+</body>
+</html>
