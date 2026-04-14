@@ -1,6 +1,3 @@
-## frontend-index.html
-
-```html
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -147,7 +144,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .section-card,
     .summary-box,
     .service-card,
     .calendar-box,
@@ -173,11 +169,13 @@
 
     .muted { color: var(--muted); }
     .soft { color: var(--soft); }
+
     .error {
       min-height: 18px;
       color: var(--error);
       font-size: 13px;
     }
+
     .success-text { color: var(--success); }
 
     .pill-row,
@@ -410,10 +408,6 @@
       color: #111 !important;
     }
 
-    .service-option.selected small,
-    .date-btn.selected small,
-    .slot-btn.selected small { color: rgba(0,0,0,0.7); }
-
     .inline-selection {
       display: flex;
       justify-content: space-between;
@@ -633,11 +627,6 @@
       min-height: 58px;
     }
 
-    .date-btn.inactive {
-      opacity: .36;
-      pointer-events: none;
-    }
-
     .review-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -728,7 +717,7 @@
         <div>
           <div class="eyebrow">Rezerwacja online</div>
           <h1>Rezerwacja wizyt online</h1>
-          <p class="lead">Bezpośrednio z Instagrama, bez zbędnych wiadomości. Klient wybiera usługę, termin i zapisuje się sam.</p>
+          <p class="lead">Bezpośrednio z Instagrama, bez zbędnych wiadomości. Klient wybiera usługę, barbera, termin i zapisuje się sam.</p>
         </div>
         <div class="step-indicator" id="stepIndicator">Krok 1 z 8</div>
       </div>
@@ -736,6 +725,7 @@
       <section class="step active" data-step="1">
         <h2>Dane kontaktowe</h2>
         <div class="notice">Zostaw dane i przejdź do wyboru terminu.</div>
+
         <label>
           Imię
           <input id="nameInput" type="text" placeholder="Wpisz imię" autocomplete="name" />
@@ -1006,11 +996,11 @@
         image: "./barbers/wiktoria.png"
       },
       {
-        id: "random-staff",
-        name: "Dostępny barber",
-        description: "System dobierze dostępnego barbera z zespołu salonu według wolnego terminu.",
-        languages: ["🇵🇱 Polska", "🇺🇦 Українська", "🇬🇧 English"],
-        image: "./barbers/default.png"
+        id: "alex",
+        name: "Alex",
+        description: "Pewny ręki barber z wyczuciem detalu. Łączy świeże podejście z czystą, precyzyjną formą.",
+        languages: ["🇺🇦 Українська", "🇵🇱 Polska", "🇬🇧 English"],
+        image: "./barbers/alex.png"
       }
     ];
 
@@ -1039,20 +1029,12 @@
     };
 
     const services = [
-      { category: "Młodszy Barber", name: "Strzyżenie włosów (krótka forma)", price: 80, duration: 60 },
-      { category: "Młodszy Barber", name: "Strzyżenie maszynką (jedna długość)", price: 70, duration: 60 },
-      { category: "Młodszy Barber", name: "Strzyżenie włosów + brody (krótka forma)", price: 120, duration: 105 },
-      { category: "Młodszy Barber", name: "Strzyżenie brody (krótka forma)", price: 60, duration: 50 },
-
-      { category: "Strzyżenie, golenie", name: "Strzyżenie włosów (Liuda)", price: 100, duration: 35 },
-      { category: "Strzyżenie, golenie", name: "Strzyżenie włosów (Jenia)", price: 100, duration: 45 },
-      { category: "Strzyżenie, golenie", name: "Strzyżenie włosów (Daniil)", price: 100, duration: 45 },
-      { category: "Strzyżenie, golenie", name: "Strzyżenie włosów (Mirosława)", price: 100, duration: 30 },
+      { category: "Strzyżenie, golenie", name: "Strzyżenie włosów", price: 100, duration: 45 },
       { category: "Strzyżenie, golenie", name: "Strzyżenie włosów długich", price: 120, duration: 60 },
       { category: "Strzyżenie, golenie", name: "Strzyżenie dziecka krótkie włosy (6-12 lat)", price: 80, duration: 30 },
       { category: "Strzyżenie, golenie", name: "Strzyżenie dziecka długie włosy (6-12 lat)", price: 95, duration: 60 },
       { category: "Strzyżenie, golenie", name: "Strzyżenie maszynką (jedna długość)", price: 80, duration: 30 },
-      { category: "Strzyżenie, golenie", name: "Strzyżenie włosów + HAIR TATTOO", price: 110, duration: 60 },
+      { category: "Strzyżenie, golenie", name: "Strzyżenie włosów + hair tattoo", price: 110, duration: 60 },
       { category: "Strzyżenie, golenie", name: "Modelowanie brody", price: 90, duration: 30 },
       { category: "Strzyżenie, golenie", name: "Strzyżenie brody", price: 80, duration: 30 },
       { category: "Strzyżenie, golenie", name: "Golenie brzytwą na gładko", price: 90, duration: 60 },
@@ -1070,7 +1052,7 @@
       { category: "Odsiwianie", name: "Odsiwianie brody", price: 90, duration: 30 }
     ];
 
-    const serviceCategories = ["Młodszy Barber", "Strzyżenie, golenie", "COMBO", "Odsiwianie"];
+    const serviceCategories = ["Strzyżenie, golenie", "COMBO", "Odsiwianie"];
 
     const stepIndicator = document.getElementById("stepIndicator");
     const steps = [...document.querySelectorAll(".step")];
@@ -1101,7 +1083,6 @@
 
     const barberFlowAsk = document.getElementById("barberFlowAsk");
     const barberFlowCarousel = document.getElementById("barberFlowCarousel");
-    const selectedBarberCard = document.getElementById("selectedBarberCard");
     const chooseBarberYes = document.getElementById("chooseBarberYes");
     const chooseBarberNo = document.getElementById("chooseBarberNo");
     const barberPrevBtn = document.getElementById("barberPrevBtn");
@@ -1162,8 +1143,7 @@
     }
 
     function getRandomBarber() {
-      const selectable = barbers.filter(barber => barber.id !== "random-staff");
-      return selectable[Math.floor(Math.random() * selectable.length)];
+      return barbers[Math.floor(Math.random() * barbers.length)];
     }
 
     function applyBarber(barber, mode = "chosen") {
@@ -1189,6 +1169,7 @@
       renderBindings();
       renderBarberDecisionState();
       renderBarberCarousel();
+      updateStepButtons();
     }
 
     function renderBindings() {
