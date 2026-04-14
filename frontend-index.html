@@ -696,17 +696,252 @@
       line-height: 1.9;
     }
 
+    /* mobile */
     @media (max-width: 760px) {
-      .app { padding: 22px; border-radius: 28px; }
-      .topbar { flex-direction: column; }
-      .review-grid { grid-template-columns: 1fr; }
-      .inline-selection { align-items: stretch; }
-      .actions > * { width: 100%; }
-      .inline-actions > * { width: 100%; }
-      .barber-track-shell { grid-template-columns: 1fr; }
-      .carousel-arrow { min-height: 54px; }
-      .barber-actions > * { width: 100%; }
-      .choice-row > * { width: 100%; }
+      body {
+        padding: 12px 8px 22px;
+      }
+
+      .app {
+        padding: 16px;
+        border-radius: 22px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .eyebrow {
+        margin-bottom: 8px;
+        font-size: 10px;
+        letter-spacing: .16em;
+      }
+
+      h1 {
+        font-size: clamp(28px, 8vw, 38px);
+        line-height: 1.02;
+      }
+
+      h2 {
+        font-size: clamp(22px, 6vw, 30px);
+      }
+
+      .lead {
+        margin-top: 10px;
+        font-size: 15px;
+        line-height: 1.45;
+      }
+
+      .step-indicator {
+        min-width: 0;
+        width: 100%;
+        padding: 10px 14px;
+        font-size: 13px;
+      }
+
+      .summary-box,
+      .service-card,
+      .calendar-box,
+      .slots-box,
+      .success-box,
+      .review-item,
+      .accordion,
+      .inline-selection,
+      .notice,
+      .barber-question-box,
+      .barber-choice-shell,
+      .barber-carousel {
+        padding: 14px;
+        border-radius: 18px;
+      }
+
+      .accordion {
+        padding: 12px;
+      }
+
+      .service-option {
+        padding: 13px 14px;
+      }
+
+      .service-option strong {
+        font-size: 15px;
+      }
+
+      .service-option small {
+        font-size: 13px;
+        margin-top: 4px;
+      }
+
+      input,
+      button {
+        min-height: 48px;
+        font-size: 15px;
+      }
+
+      .pill {
+        min-height: 32px;
+        font-size: 12px;
+        padding: 0 10px;
+      }
+
+      .review-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .inline-selection {
+        align-items: stretch;
+      }
+
+      .actions > *,
+      .inline-actions > * {
+        width: 100%;
+      }
+
+      /* главный фикс шага с барбером */
+      .barber-flow {
+        gap: 12px;
+      }
+
+      .barber-carousel-header {
+        gap: 8px;
+      }
+
+      .barber-carousel-header h3 {
+        font-size: 18px;
+        line-height: 1.15;
+      }
+
+      .barber-carousel-header p {
+        font-size: 14px;
+        line-height: 1.35;
+      }
+
+      .barber-track-shell {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        align-items: stretch;
+      }
+
+      .barber-card {
+        grid-column: 1 / -1;
+        order: 1;
+        padding: 12px;
+        gap: 10px;
+        border-radius: 18px;
+      }
+
+      #barberPrevBtn {
+        order: 2;
+      }
+
+      #barberNextBtn {
+        order: 3;
+      }
+
+      .carousel-arrow {
+        width: 100%;
+        min-height: 42px;
+        border-radius: 14px;
+        font-size: 18px;
+        padding: 0 10px;
+      }
+
+      .barber-image {
+        padding: 8px;
+        border-radius: 16px;
+        max-height: none;
+      }
+
+      .barber-image img {
+        border-radius: 12px;
+      }
+
+      .barber-badge {
+        left: 8px;
+        bottom: 8px;
+        padding: 6px 8px;
+        font-size: 11px;
+      }
+
+      .barber-copy {
+        gap: 8px;
+      }
+
+      .barber-copy h3 {
+        font-size: 20px;
+        line-height: 1.05;
+      }
+
+      .barber-copy p {
+        font-size: 14px;
+        line-height: 1.45;
+      }
+
+      .barber-langs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 6px;
+        padding-bottom: 2px;
+      }
+
+      .barber-langs span {
+        min-height: 28px;
+        padding: 0 8px;
+        font-size: 11px;
+        white-space: nowrap;
+        flex: 0 0 auto;
+      }
+
+      .barber-actions {
+        gap: 8px;
+      }
+
+      .barber-actions > * {
+        width: 100%;
+      }
+
+      .barber-dots {
+        gap: 6px;
+        margin-top: 2px;
+      }
+
+      .barber-dots button {
+        width: 10px;
+        min-height: 10px;
+      }
+
+      .inline-selection .meta strong {
+        font-size: 16px;
+      }
+
+      .inline-selection .meta span {
+        font-size: 13px;
+        line-height: 1.35;
+      }
+
+      .choice-row {
+        width: 100%;
+      }
+
+      .choice-row > * {
+        width: 100%;
+      }
+
+      .calendar-grid,
+      .slots-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .date-btn,
+      .slot-btn {
+        min-height: 46px;
+        font-size: 14px;
+        padding: 8px;
+      }
     }
   </style>
 </head>
@@ -797,14 +1032,14 @@
             <div class="barber-carousel-header">
               <div>
                 <h3>Wybierz swojego barbera</h3>
-                <p class="muted">Przewijaj kartę w lewo i w prawo, potem kliknij „Wybierz”.</p>
+                <p class="muted">Przewijaj kartę i kliknij „Wybierz”.</p>
               </div>
               <div class="pill">Aktualnie: <span data-bind="barberName">Losowy</span></div>
             </div>
 
             <div class="barber-carousel">
               <div class="barber-track-shell">
-                <button type="button" id="barberPrevBtn" class="carousel-arrow ghost-btn">←</button>
+                <button type="button" id="barberPrevBtn" class="carousel-arrow ghost-btn">← Poprzedni</button>
 
                 <article class="barber-card" id="barberCard">
                   <div class="barber-image" id="barberImageBox">
@@ -828,7 +1063,7 @@
                   </div>
                 </article>
 
-                <button type="button" id="barberNextBtn" class="carousel-arrow ghost-btn">→</button>
+                <button type="button" id="barberNextBtn" class="carousel-arrow ghost-btn">Następny →</button>
               </div>
 
               <div class="barber-dots" id="barberDots"></div>
@@ -1099,11 +1334,22 @@
     const resetBarberSelectionBtn = document.getElementById("resetBarberSelectionBtn");
 
     function formatPhone(rawValue) {
-      const digits = rawValue.replace(/\D/g, "");
+      let digits = String(rawValue || "").replace(/\D/g, "");
+
       if (digits.startsWith("48")) {
-        return "+48 " + digits.slice(2, 11).replace(/(\d{3})(\d{0,3})(\d{0,3})/, (_, a, b, c) => [a, b, c].filter(Boolean).join(" "));
+        digits = digits.slice(0, 11);
+      } else {
+        digits = "48" + digits.slice(0, 9);
       }
-      return "+48 " + digits.slice(0, 9).replace(/(\d{3})(\d{0,3})(\d{0,3})/, (_, a, b, c) => [a, b, c].filter(Boolean).join(" "));
+
+      const local = digits.slice(2);
+
+      let formatted = "+48";
+      if (local.length > 0) formatted += " " + local.slice(0, 3);
+      if (local.length > 3) formatted += " " + local.slice(3, 6);
+      if (local.length > 6) formatted += " " + local.slice(6, 9);
+
+      return formatted;
     }
 
     function isValidName(value) {
@@ -1111,7 +1357,7 @@
     }
 
     function isValidPhone(value) {
-      return /^\+48\s?\d{3}\s?\d{3}\s?\d{3}$/.test(value.trim());
+      return /^\+48 \d{3} \d{3} \d{3}$/.test(value.trim());
     }
 
     function formatPrice(price) {
@@ -1347,7 +1593,6 @@
       barberLanguages.innerHTML = barber.languages.map(lang => `<span>${lang}</span>`).join("");
 
       barberImage.alt = barber.name;
-      barberImage.src = barber.image;
       barberImage.onload = () => {
         barberImage.classList.remove("hidden");
         barberImagePlaceholder.classList.add("hidden");
@@ -1356,6 +1601,7 @@
         barberImage.classList.add("hidden");
         barberImagePlaceholder.classList.remove("hidden");
       };
+      barberImage.src = barber.image;
 
       barberDots.innerHTML = "";
       barbers.forEach((_, index) => {
@@ -1574,10 +1820,33 @@
       updateStepButtons();
     });
 
+    phoneInput.value = "+48 ";
+    state.phone = "+48 ";
+
+    phoneInput.addEventListener("focus", () => {
+      if (!phoneInput.value.trim()) {
+        phoneInput.value = "+48 ";
+        state.phone = "+48 ";
+      }
+    });
+
+    phoneInput.addEventListener("keydown", (e) => {
+      const cursorPos = phoneInput.selectionStart || 0;
+      if ((e.key === "Backspace" || e.key === "Delete") && cursorPos <= 4) {
+        e.preventDefault();
+      }
+    });
+
     phoneInput.addEventListener("input", (e) => {
-      const formatted = formatPhone(e.target.value);
+      let formatted = formatPhone(e.target.value);
+
+      if (formatted === "+48") {
+        formatted = "+48 ";
+      }
+
       e.target.value = formatted;
       state.phone = formatted;
+
       validateStep1(true);
       renderBindings();
       updateStepButtons();
@@ -1711,234 +1980,6 @@
     renderSlots();
     renderBindings();
     updateStepButtons();
-
-    @media (max-width: 640px) {
-  body {
-    padding: 14px 8px 24px;
-  }
-
-  .app {
-    padding: 14px;
-    border-radius: 24px;
-  }
-
-  .topbar {
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-
-  .eyebrow {
-    margin-bottom: 8px;
-    font-size: 10px;
-    letter-spacing: .16em;
-  }
-
-  h1 {
-    font-size: clamp(28px, 8vw, 38px);
-    line-height: 1.02;
-  }
-
-  h2 {
-    font-size: clamp(22px, 6vw, 30px);
-  }
-
-  .lead {
-    margin-top: 10px;
-    font-size: 15px;
-    line-height: 1.45;
-  }
-
-  .step-indicator {
-    min-width: unset;
-    width: 100%;
-    padding: 10px 14px;
-    font-size: 13px;
-  }
-
-  .summary-box,
-  .service-card,
-  .calendar-box,
-  .slots-box,
-  .success-box,
-  .review-item,
-  .accordion,
-  .inline-selection,
-  .notice,
-  .barber-question-box,
-  .barber-choice-shell,
-  .barber-carousel {
-    padding: 14px;
-    border-radius: 18px;
-  }
-
-  .accordion {
-    padding: 12px;
-  }
-
-  .service-option {
-    padding: 13px 14px;
-  }
-
-  .service-option strong {
-    font-size: 15px;
-  }
-
-  .service-option small {
-    font-size: 13px;
-    margin-top: 4px;
-  }
-
-  input,
-  button {
-    min-height: 48px;
-    font-size: 15px;
-  }
-
-  .pill {
-    min-height: 32px;
-    font-size: 12px;
-    padding: 0 10px;
-  }
-
-  .barber-carousel-header {
-    gap: 8px;
-  }
-
-  .barber-carousel-header h3 {
-    font-size: 18px;
-    line-height: 1.15;
-  }
-
-  .barber-carousel-header p {
-    font-size: 14px;
-    line-height: 1.35;
-  }
-
-  .barber-track-shell {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .carousel-arrow {
-    min-height: 44px;
-    width: 100%;
-    border-radius: 14px;
-    font-size: 20px;
-    padding: 0;
-  }
-
-  .barber-card {
-    padding: 12px;
-    gap: 10px;
-    border-radius: 18px;
-  }
-
-  .barber-image {
-    aspect-ratio: 1 / 1;
-    max-height: 260px;
-    border-radius: 16px;
-    padding: 10px;
-  }
-
-  .barber-image img {
-    border-radius: 12px;
-  }
-
-  .barber-badge {
-    left: 8px;
-    bottom: 8px;
-    padding: 6px 8px;
-    font-size: 11px;
-  }
-
-  .barber-copy {
-    gap: 8px;
-  }
-
-  .barber-copy h3 {
-    font-size: 18px;
-    line-height: 1.05;
-  }
-
-  .barber-copy p {
-    font-size: 14px;
-    line-height: 1.45;
-  }
-
-  .barber-langs {
-    gap: 6px;
-  }
-
-  .barber-langs span {
-    min-height: 28px;
-    padding: 0 8px;
-    font-size: 11px;
-  }
-
-  .barber-actions {
-    gap: 8px;
-  }
-
-  .barber-actions button {
-    width: 100%;
-  }
-
-  .barber-dots {
-    gap: 6px;
-    margin-top: 2px;
-  }
-
-  .barber-dots button {
-    width: 10px;
-    min-height: 10px;
-  }
-
-  .inline-selection {
-    gap: 10px;
-    align-items: stretch;
-  }
-
-  .inline-selection .meta strong {
-    font-size: 16px;
-  }
-
-  .inline-selection .meta span {
-    font-size: 13px;
-    line-height: 1.35;
-  }
-
-  .inline-actions,
-  .actions,
-  .choice-row {
-    gap: 8px;
-  }
-
-  .inline-actions > *,
-  .actions > *,
-  .choice-row > * {
-    width: 100%;
-  }
-
-  .calendar-grid,
-  .slots-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-  }
-
-  .date-btn,
-  .slot-btn {
-    min-height: 46px;
-    font-size: 14px;
-    padding: 8px;
-  }
-
-  .review-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-}
-    
   </script>
 </body>
 </html>
