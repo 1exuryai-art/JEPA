@@ -1,3 +1,6 @@
+## frontend-index.html
+
+```html
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -21,7 +24,6 @@
       --success: #d8ffd8;
       --shadow-lg: 0 24px 80px rgba(0,0,0,0.55);
       --shadow-md: 0 14px 34px rgba(0,0,0,0.34);
-      --glow-soft: 0 0 0 1px rgba(255,255,255,0.14), 0 0 24px rgba(255,255,255,0.06);
       --glow-selected: 0 0 0 1px rgba(255,255,255,0.42), 0 0 28px rgba(255,255,255,0.12), inset 0 1px 0 rgba(255,255,255,0.16);
       --radius-xl: 30px;
       --radius-lg: 24px;
@@ -154,7 +156,10 @@
     .review-item,
     .accordion,
     .inline-selection,
-    .notice {
+    .notice,
+    .barber-question-box,
+    .barber-choice-shell,
+    .barber-carousel {
       border: 1px solid var(--line);
       background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.03));
       border-radius: var(--radius-lg);
@@ -397,7 +402,8 @@
     .service-option.selected,
     .date-btn.selected,
     .slot-btn.selected,
-    .selected-glow {
+    .selected-glow,
+    .choice-btn.selected {
       border-color: rgba(255,255,255,0.32) !important;
       box-shadow: var(--glow-selected) !important;
       background: linear-gradient(180deg, rgba(255,255,255,0.97), rgba(220,220,220,0.95)) !important;
@@ -429,6 +435,186 @@
     }
 
     .inline-selection .meta span { color: var(--muted); }
+
+    .barber-flow {
+      display: grid;
+      gap: 16px;
+      animation: stepEnter .35s ease;
+    }
+
+    .barber-question-box {
+      display: grid;
+      gap: 14px;
+    }
+
+    .barber-choice-shell {
+      display: grid;
+      gap: 14px;
+    }
+
+    .choice-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .choice-btn {
+      min-width: 140px;
+    }
+
+    .choice-btn-dark {
+      background: rgba(255,255,255,0.045);
+      color: var(--text);
+      border-color: rgba(255,255,255,0.12);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .barber-carousel {
+      display: grid;
+      gap: 16px;
+      overflow: hidden;
+    }
+
+    .barber-carousel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .barber-track-shell {
+      display: grid;
+      grid-template-columns: 64px 1fr 64px;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .carousel-arrow {
+      min-height: 64px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .barber-card {
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.03));
+      box-shadow: var(--shadow-md);
+      display: grid;
+      gap: 14px;
+      min-height: 100%;
+    }
+
+    .barber-image {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.12);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03)),
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.12), transparent 28%),
+        #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.58);
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      line-height: 1.5;
+      position: relative;
+    }
+
+    .barber-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .barber-badge {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.58);
+      color: #fff;
+      font-size: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+    }
+
+    .barber-copy {
+      display: grid;
+      gap: 10px;
+    }
+
+    .barber-copy h3 {
+      font-size: clamp(26px, 4vw, 34px);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .barber-copy p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .barber-langs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .barber-langs span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .barber-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .barber-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .barber-dots button {
+      min-height: 12px;
+      width: 12px;
+      padding: 0;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+      border: 0;
+      box-shadow: none;
+    }
+
+    .barber-dots button.active {
+      background: #fff;
+      box-shadow: 0 0 18px rgba(255,255,255,0.28);
+    }
+
+    .barber-inline-summary {
+      display: grid;
+      gap: 6px;
+    }
 
     .calendar-grid,
     .slots-grid {
@@ -528,6 +714,10 @@
       .inline-selection { align-items: stretch; }
       .actions > * { width: 100%; }
       .inline-actions > * { width: 100%; }
+      .barber-track-shell { grid-template-columns: 1fr; }
+      .carousel-arrow { min-height: 54px; }
+      .barber-actions > * { width: 100%; }
+      .choice-row > * { width: 100%; }
     }
   </style>
 </head>
@@ -540,7 +730,7 @@
           <h1>Rezerwacja wizyt online</h1>
           <p class="lead">Bezpośrednio z Instagrama, bez zbędnych wiadomości. Klient wybiera usługę, termin i zapisuje się sam.</p>
         </div>
-        <div class="step-indicator" id="stepIndicator">Krok 1 z 7</div>
+        <div class="step-indicator" id="stepIndicator">Krok 1 z 8</div>
       </div>
 
       <section class="step active" data-step="1">
@@ -592,22 +782,105 @@
       </section>
 
       <section class="step" data-step="3">
-        <h2>Potwierdzenie usługi</h2>
-        <div class="notice">Na podstawie usługi pokażemy tylko dostępne terminy.</div>
+        <h2>Wybór barbera</h2>
+        <div class="notice">Najpierw decydujesz, czy chcesz wybrać konkretnego barbera.</div>
+
+        <div class="service-card service-meta selected-glow">
+          <p><strong>Usługa:</strong> <span data-bind="serviceName">—</span></p>
+          <p><strong>Czas:</strong> <span data-bind="durationText">—</span></p>
+          <p><strong>Cena:</strong> <span data-bind="priceText">—</span></p>
+        </div>
+
+        <div class="barber-flow" id="barberFlowAsk">
+          <div class="barber-question-box">
+            <h3>Czy chcesz wybrać barbera?</h3>
+            <p class="muted">Możesz wybrać konkretną osobę albo zostawić losowy przydział.</p>
+            <div class="choice-row">
+              <button type="button" id="chooseBarberYes" class="choice-btn pulse-cta">Tak</button>
+              <button type="button" id="chooseBarberNo" class="choice-btn choice-btn-dark">Nie</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="barber-flow hidden" id="barberFlowCarousel">
+          <div class="barber-choice-shell">
+            <div class="barber-carousel-header">
+              <div>
+                <h3>Wybierz swojego barbera</h3>
+                <p class="muted">Przewijaj kartę w lewo i w prawo, potem kliknij „Wybierz”.</p>
+              </div>
+              <div class="pill">Aktualnie: <span data-bind="barberName">Losowy</span></div>
+            </div>
+
+            <div class="barber-carousel">
+              <div class="barber-track-shell">
+                <button type="button" id="barberPrevBtn" class="carousel-arrow ghost-btn">←</button>
+
+                <article class="barber-card" id="barberCard">
+                  <div class="barber-image" id="barberImageBox">
+                    <img id="barberImage" src="" alt="" class="hidden" />
+                    <div id="barberImagePlaceholder">
+                      Tutaj dodasz PNG barbera<br />
+                      1:1 • najlepiej 1200×1200
+                    </div>
+                    <span class="barber-badge" id="barberIndexBadge">1 / 4</span>
+                  </div>
+
+                  <div class="barber-copy">
+                    <h3 id="barberNameHeading">—</h3>
+                    <p id="barberDescription">—</p>
+                    <div class="barber-langs" id="barberLanguages"></div>
+                  </div>
+
+                  <div class="barber-actions">
+                    <button type="button" id="barberBackToRandom" class="ghost-btn">Nie wybieram</button>
+                    <button type="button" id="selectBarberBtn" class="pulse-cta">Wybierz</button>
+                  </div>
+                </article>
+
+                <button type="button" id="barberNextBtn" class="carousel-arrow ghost-btn">→</button>
+              </div>
+
+              <div class="barber-dots" id="barberDots"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="inline-selection" id="selectedBarberCard">
+          <div class="meta barber-inline-summary">
+            <strong>Barber: <span data-bind="barberName">Losowy</span></strong>
+            <span data-bind="barberModeText">System wybierze dostępnego barbera automatycznie.</span>
+          </div>
+          <div class="inline-actions">
+            <button type="button" id="step3Next" class="pulse-cta">Dalej</button>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="back-btn ghost-btn">Wstecz</button>
+          <button type="button" id="resetBarberSelectionBtn" class="ghost-btn">Zmień decyzję</button>
+        </div>
+      </section>
+
+      <section class="step" data-step="4">
+        <h2>Potwierdzenie wyboru</h2>
+        <div class="notice">Sprawdź usługę i barbera, a potem przejdź dalej.</div>
 
         <div class="service-card service-meta selected-glow">
           <p><strong>Nazwa:</strong> <span data-bind="serviceName">—</span></p>
           <p><strong>Czas:</strong> <span data-bind="durationText">—</span></p>
           <p><strong>Cena:</strong> <span data-bind="priceText">—</span></p>
+          <p><strong>Barber:</strong> <span data-bind="barberName">Losowy</span></p>
         </div>
 
         <div class="actions">
           <button type="button" id="changeServiceBtn" class="ghost-btn">Zmień usługę</button>
-          <button type="button" id="step3Next" class="pulse-cta">Dalej</button>
+          <button type="button" id="changeBarberBtn" class="ghost-btn">Zmień barbera</button>
+          <button type="button" id="step4ConfirmNext" class="pulse-cta">Dalej</button>
         </div>
       </section>
 
-      <section class="step" data-step="4">
+      <section class="step" data-step="5">
         <h2>Wybór daty</h2>
         <div class="notice">Wybierz dzień wizyty.</div>
 
@@ -622,11 +895,11 @@
 
         <div class="actions">
           <button type="button" class="back-btn ghost-btn">Wstecz</button>
-          <button type="button" id="step4Next" class="pulse-cta" disabled>Dalej</button>
+          <button type="button" id="step5Next" class="pulse-cta" disabled>Dalej</button>
         </div>
       </section>
 
-      <section class="step" data-step="5">
+      <section class="step" data-step="6">
         <h2>Wybór godziny</h2>
         <div class="notice">Wybierz godzinę wizyty.</div>
 
@@ -642,11 +915,11 @@
 
         <div class="actions">
           <button type="button" class="back-btn ghost-btn">Wstecz</button>
-          <button type="button" id="step5Next" class="pulse-cta" disabled>Dalej</button>
+          <button type="button" id="step6Next" class="pulse-cta" disabled>Dalej</button>
         </div>
       </section>
 
-      <section class="step" data-step="6">
+      <section class="step" data-step="7">
         <h2>Potwierdzenie rezerwacji</h2>
         <div class="notice">Sprawdź dane i potwierdź rezerwację.</div>
 
@@ -654,6 +927,7 @@
           <div class="review-item"><strong>Imię</strong><br /><span data-bind="name">—</span></div>
           <div class="review-item"><strong>Telefon</strong><br /><span data-bind="phone">—</span></div>
           <div class="review-item"><strong>Usługa</strong><br /><span data-bind="serviceName">—</span></div>
+          <div class="review-item"><strong>Barber</strong><br /><span data-bind="barberName">Losowy</span></div>
           <div class="review-item"><strong>Cena</strong><br /><span data-bind="priceText">—</span></div>
           <div class="review-item"><strong>Czas</strong><br /><span data-bind="durationText">—</span></div>
           <div class="review-item"><strong>Data</strong><br /><span data-bind="dateText">—</span></div>
@@ -668,7 +942,7 @@
         <div class="error" id="submitError"></div>
       </section>
 
-      <section class="step" data-step="7">
+      <section class="step" data-step="8">
         <h2>Gotowe</h2>
         <div class="notice">Twoja rezerwacja została zapisana. W razie potrzeby możesz wrócić na Instagram, zadzwonić albo sprawdzić dojazd.</div>
 
@@ -676,6 +950,7 @@
           <p class="success-text"><strong>Wizyta zarezerwowana ✅</strong></p>
           <br />
           <p><strong>Usługa:</strong> <span data-bind="serviceName">—</span></p>
+          <p><strong>Barber:</strong> <span data-bind="barberName">Losowy</span></p>
           <p><strong>Data:</strong> <span data-bind="dateText">—</span></p>
           <p><strong>Godzina:</strong> <span data-bind="time">—</span></p>
         </div>
@@ -706,6 +981,38 @@
     const INSTAGRAM_URL = "https://instagram.com/";
     const CONTACT_PHONE = "+48123456789";
     const MAPS_URL = "https://maps.google.com/?q=Wrocław";
+    const TOTAL_STEPS = 8;
+
+    const barbers = [
+      {
+        id: "andrzej",
+        name: "Andrzej",
+        description: "Młody i ambitny barber z pasją do klasycznych strzyżeń.",
+        languages: ["🇺🇦 Українська", "🇵🇱 Polska", "🇬🇧 English"],
+        image: "./barbers/andrzej.png"
+      },
+      {
+        id: "michal",
+        name: "Michal",
+        description: "Doświadczony barber z 3-letnim stażem. Mistrz klasyki i nowoczesnych stylów.",
+        languages: ["🇺🇦 Українська", "🇵🇱 Polska", "🇬🇧 English"],
+        image: "./barbers/michal.png"
+      },
+      {
+        id: "wiktoria",
+        name: "Wiktoria",
+        description: "Młody talent z energią i świeżym podejściem do strzyżeń.",
+        languages: ["🇺🇦 Українська", "🇷🇺 Русский", "🇵🇱 Polska"],
+        image: "./barbers/wiktoria.png"
+      },
+      {
+        id: "random-staff",
+        name: "Dostępny barber",
+        description: "System dobierze dostępnego barbera z zespołu salonu według wolnego terminu.",
+        languages: ["🇵🇱 Polska", "🇺🇦 Українська", "🇬🇧 English"],
+        image: "./barbers/default.png"
+      }
+    ];
 
     const state = {
       step: 1,
@@ -714,6 +1021,13 @@
       serviceName: "",
       price: null,
       duration: null,
+      barberDecision: null,
+      barberIndex: 0,
+      barberId: "",
+      barberName: "Losowy",
+      barberDescription: "",
+      barberLanguages: [],
+      barberModeText: "System wybierze dostępnego barbera automatycznie.",
       date: "",
       time: "",
       availableDates: [],
@@ -768,9 +1082,10 @@
     const selectedServiceCard = document.getElementById("selectedServiceCard");
     const step2InlineNext = document.getElementById("step2InlineNext");
     const step2Next = document.getElementById("step2Next");
-    const step4Next = document.getElementById("step4Next");
     const step5Next = document.getElementById("step5Next");
+    const step6Next = document.getElementById("step6Next");
     const changeServiceBtn = document.getElementById("changeServiceBtn");
+    const changeBarberBtn = document.getElementById("changeBarberBtn");
     const dateError = document.getElementById("dateError");
     const timeError = document.getElementById("timeError");
     const submitError = document.getElementById("submitError");
@@ -783,6 +1098,24 @@
     const monthLabel = document.getElementById("monthLabel");
     const confirmBookingBtn = document.getElementById("confirmBookingBtn");
     const serviceAccordionList = document.getElementById("serviceAccordionList");
+
+    const barberFlowAsk = document.getElementById("barberFlowAsk");
+    const barberFlowCarousel = document.getElementById("barberFlowCarousel");
+    const selectedBarberCard = document.getElementById("selectedBarberCard");
+    const chooseBarberYes = document.getElementById("chooseBarberYes");
+    const chooseBarberNo = document.getElementById("chooseBarberNo");
+    const barberPrevBtn = document.getElementById("barberPrevBtn");
+    const barberNextBtn = document.getElementById("barberNextBtn");
+    const barberNameHeading = document.getElementById("barberNameHeading");
+    const barberDescription = document.getElementById("barberDescription");
+    const barberLanguages = document.getElementById("barberLanguages");
+    const barberImage = document.getElementById("barberImage");
+    const barberImagePlaceholder = document.getElementById("barberImagePlaceholder");
+    const barberIndexBadge = document.getElementById("barberIndexBadge");
+    const barberDots = document.getElementById("barberDots");
+    const selectBarberBtn = document.getElementById("selectBarberBtn");
+    const barberBackToRandom = document.getElementById("barberBackToRandom");
+    const resetBarberSelectionBtn = document.getElementById("resetBarberSelectionBtn");
 
     function formatPhone(rawValue) {
       const digits = rawValue.replace(/\D/g, "");
@@ -828,8 +1161,34 @@
       return months[monthNumber - 1] || "Miesiąc";
     }
 
-    function getServiceByName(name) {
-      return services.find(service => service.name === name) || null;
+    function getRandomBarber() {
+      const selectable = barbers.filter(barber => barber.id !== "random-staff");
+      return selectable[Math.floor(Math.random() * selectable.length)];
+    }
+
+    function applyBarber(barber, mode = "chosen") {
+      if (!barber) return;
+      state.barberId = barber.id;
+      state.barberName = barber.name;
+      state.barberDescription = barber.description;
+      state.barberLanguages = barber.languages;
+      state.barberModeText = mode === "random"
+        ? `Przydzielono automatycznie: ${barber.name}.`
+        : `Wybrano konkretnie: ${barber.name}.`;
+      renderBindings();
+      renderBarberCarousel();
+    }
+
+    function resetBarberDecision() {
+      state.barberDecision = null;
+      state.barberId = "";
+      state.barberName = "Losowy";
+      state.barberDescription = "";
+      state.barberLanguages = [];
+      state.barberModeText = "System wybierze dostępnego barbera automatycznie.";
+      renderBindings();
+      renderBarberDecisionState();
+      renderBarberCarousel();
     }
 
     function renderBindings() {
@@ -840,6 +1199,8 @@
       document.querySelectorAll('[data-bind="durationText"]').forEach(el => el.textContent = formatDuration(state.duration));
       document.querySelectorAll('[data-bind="dateText"]').forEach(el => el.textContent = formatDate(state.date));
       document.querySelectorAll('[data-bind="time"]').forEach(el => el.textContent = state.time || "—");
+      document.querySelectorAll('[data-bind="barberName"]').forEach(el => el.textContent = state.barberName || "Losowy");
+      document.querySelectorAll('[data-bind="barberModeText"]').forEach(el => el.textContent = state.barberModeText || "System wybierze dostępnego barbera automatycznie.");
     }
 
     function goToStep(step) {
@@ -847,7 +1208,7 @@
       steps.forEach(section => {
         section.classList.toggle("active", Number(section.dataset.step) === step);
       });
-      stepIndicator.textContent = `Krok ${step} z 7`;
+      stepIndicator.textContent = `Krok ${step} z ${TOTAL_STEPS}`;
       renderBindings();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -855,13 +1216,15 @@
     function updateStepButtons() {
       const validStep1 = isValidName(state.name) && isValidPhone(state.phone);
       const hasService = Boolean(state.serviceName);
+      const hasBarberDecision = Boolean(state.barberDecision);
 
       step1Next.disabled = !validStep1;
       selectedServiceCard.classList.toggle("hidden", !hasService);
       step2InlineNext.disabled = !hasService;
       step2Next.disabled = !hasService;
-      step4Next.disabled = !Boolean(state.date) || state.loadingDates;
-      step5Next.disabled = !Boolean(state.time) || state.loadingSlots;
+      document.getElementById("step3Next").disabled = !hasBarberDecision;
+      step5Next.disabled = !Boolean(state.date) || state.loadingDates;
+      step6Next.disabled = !Boolean(state.time) || state.loadingSlots;
       confirmBookingBtn.disabled = state.submitting;
 
       availabilityStatus.textContent = state.loadingDates
@@ -920,6 +1283,7 @@
 
       if (previousService !== service.name) {
         resetAvailabilityState();
+        resetBarberDecision();
       }
 
       renderServiceAccordion();
@@ -982,6 +1346,53 @@
         accordion.appendChild(body);
         serviceAccordionList.appendChild(accordion);
       });
+    }
+
+    function renderBarberDecisionState() {
+      const isChoosing = state.barberDecision === "choose";
+      barberFlowAsk.classList.toggle("hidden", isChoosing);
+      barberFlowCarousel.classList.toggle("hidden", !isChoosing);
+
+      chooseBarberYes.classList.toggle("selected", state.barberDecision === "choose");
+      chooseBarberNo.classList.toggle("selected", state.barberDecision === "random");
+    }
+
+    function renderBarberCarousel() {
+      const barber = barbers[state.barberIndex] || barbers[0];
+      barberNameHeading.textContent = barber.name;
+      barberDescription.textContent = barber.description;
+      barberIndexBadge.textContent = `${state.barberIndex + 1} / ${barbers.length}`;
+
+      barberLanguages.innerHTML = barber.languages.map(lang => `<span>${lang}</span>`).join("");
+
+      barberImage.alt = barber.name;
+      barberImage.src = barber.image;
+      barberImage.onload = () => {
+        barberImage.classList.remove("hidden");
+        barberImagePlaceholder.classList.add("hidden");
+      };
+      barberImage.onerror = () => {
+        barberImage.classList.add("hidden");
+        barberImagePlaceholder.classList.remove("hidden");
+      };
+
+      barberDots.innerHTML = "";
+      barbers.forEach((_, index) => {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = index === state.barberIndex ? "active" : "";
+        dot.addEventListener("click", () => {
+          state.barberIndex = index;
+          renderBarberCarousel();
+        });
+        barberDots.appendChild(dot);
+      });
+    }
+
+    function nextBarber(direction) {
+      const total = barbers.length;
+      state.barberIndex = (state.barberIndex + direction + total) % total;
+      renderBarberCarousel();
     }
 
     function renderCalendar() {
@@ -1075,7 +1486,9 @@
 
       const params = new URLSearchParams({
         serviceName: state.serviceName,
-        duration: String(state.duration)
+        duration: String(state.duration),
+        barberId: state.barberId || "",
+        barberName: state.barberName || ""
       });
 
       try {
@@ -1106,7 +1519,9 @@
       const params = new URLSearchParams({
         serviceName: state.serviceName,
         date: state.date,
-        duration: String(state.duration)
+        duration: String(state.duration),
+        barberId: state.barberId || "",
+        barberName: state.barberName || ""
       });
 
       try {
@@ -1136,6 +1551,9 @@
         service: state.serviceName,
         price: state.price,
         duration: state.duration,
+        barberId: state.barberId,
+        barberName: state.barberName,
+        barberMode: state.barberDecision,
         date: state.date,
         time: state.time
       };
@@ -1152,7 +1570,7 @@
           throw new Error(data?.message || "Błąd serwera");
         }
 
-        goToStep(7);
+        goToStep(8);
       } catch (error) {
         console.error(error);
         submitError.textContent = error.message || "Nie udało się wysłać rezerwacji. Spróbuj ponownie.";
@@ -1192,38 +1610,87 @@
     step2InlineNext.addEventListener("click", () => {
       if (!state.serviceName) return;
       goToStep(3);
+      renderBarberDecisionState();
     });
 
     step2Next.addEventListener("click", () => {
       if (!state.serviceName) return;
       goToStep(3);
+      renderBarberDecisionState();
     });
 
-    document.getElementById("step3Next").addEventListener("click", async () => {
+    chooseBarberYes.addEventListener("click", () => {
+      state.barberDecision = "choose";
+      state.barberIndex = 0;
+      renderBarberDecisionState();
+      renderBarberCarousel();
+      updateStepButtons();
+    });
+
+    chooseBarberNo.addEventListener("click", () => {
+      state.barberDecision = "random";
+      const randomBarber = getRandomBarber();
+      applyBarber(randomBarber, "random");
+      renderBarberDecisionState();
+      updateStepButtons();
+    });
+
+    barberPrevBtn.addEventListener("click", () => nextBarber(-1));
+    barberNextBtn.addEventListener("click", () => nextBarber(1));
+
+    selectBarberBtn.addEventListener("click", () => {
+      state.barberDecision = "choose";
+      applyBarber(barbers[state.barberIndex], "chosen");
+      updateStepButtons();
+    });
+
+    barberBackToRandom.addEventListener("click", () => {
+      state.barberDecision = "random";
+      const randomBarber = getRandomBarber();
+      applyBarber(randomBarber, "random");
+      renderBarberDecisionState();
+      updateStepButtons();
+    });
+
+    resetBarberSelectionBtn.addEventListener("click", () => {
+      resetBarberDecision();
+    });
+
+    document.getElementById("step3Next").addEventListener("click", () => {
+      if (!state.barberDecision) return;
       goToStep(4);
+    });
+
+    document.getElementById("step4ConfirmNext").addEventListener("click", async () => {
+      goToStep(5);
       await fetchAvailability();
     });
 
-    document.getElementById("step4Next").addEventListener("click", () => {
+    document.getElementById("step5Next").addEventListener("click", () => {
       if (!state.date) {
         dateError.textContent = "Wybierz datę";
         return;
       }
-      goToStep(5);
+      goToStep(6);
     });
 
-    document.getElementById("step5Next").addEventListener("click", () => {
+    document.getElementById("step6Next").addEventListener("click", () => {
       if (!state.time) {
         timeError.textContent = "Wybierz godzinę";
         return;
       }
-      goToStep(6);
+      goToStep(7);
     });
 
     document.getElementById("confirmBookingBtn").addEventListener("click", submitBooking);
 
     changeServiceBtn.addEventListener("click", () => {
       goToStep(2);
+    });
+
+    changeBarberBtn.addEventListener("click", () => {
+      goToStep(3);
+      renderBarberDecisionState();
     });
 
     document.querySelectorAll(".back-btn").forEach(btn => {
@@ -1257,6 +1724,8 @@
 
     state.openCategory = serviceCategories[0];
     renderServiceAccordion();
+    renderBarberDecisionState();
+    renderBarberCarousel();
     renderCalendar();
     renderSlots();
     renderBindings();
