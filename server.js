@@ -6,12 +6,24 @@ import { google } from "googleapis";
 dotenv.config();
 
 const app = express();
-app.use(cors());
-app.use(express.json());
-
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
 const TIMEZONE = "Europe/Warsaw";
 const CALENDAR_ID = process.env.GOOGLE_CALENDAR_ID || "primary";
+
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+const requiredEnv = [
+  "GOOGLE_CLIENT_ID",
+  "GOOGLE_CLIENT_SECRET",
+  "GOOGLE_REFRESH_TOKEN"
+];
+
+const missingEnv = requiredEnv.filter((key) => !process.env[key]);
+if (missingEnv.length > 0) {
+  console.error("Missing required env variables:", missingEnv.join(", "));
+}
 
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
@@ -35,7 +47,9 @@ const WORKING_HOURS = {
 };
 
 function parseTimeToMinutes(time) {
+  if (!time || !time.includes(":")) return NaN;
   const [h, m] = time.split(":").map(Number);
+  if (Number.isNaN(h) || Number.isNaN(m)) return NaN;
   return h * 60 + m;
 }
 
@@ -57,6 +71,19 @@ function overlaps(startA, endA, startB, endB) {
   return startA < endB && endA > startB;
 }
 
+function isValidDateString(date) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(date);
+}
+
+function isValidTimeString(time) {
+  return /^\d{2}:\d{2}$/.test(time);
+}
+
+function normalizePrice(price) {
+  if (price === undefined || price === null || price === "") return "";
+  return String(price).trim().replace(/\s*zł\s*$/i, "");
+}
+
 async function getBusyEvents(date) {
   const timeMin = new Date(`${date}T00:00:00+02:00`).toISOString();
   const timeMax = new Date(`${date}T23:59:59+02:00`).toISOString();
@@ -70,8 +97,8 @@ async function getBusyEvents(date) {
   });
 
   return (response.data.items || [])
-    .filter(event => event.start?.dateTime && event.end?.dateTime)
-    .map(event => ({
+    .filter((event) => event.start?.dateTime && event.end?.dateTime)
+    .map((event) => ({
       start: new Date(event.start.dateTime),
       end: new Date(event.end.dateTime)
     }));
@@ -91,7 +118,7 @@ async function getAvailableSlots(date, duration) {
     const slotStart = combineDateAndTime(date, slotTime);
     const slotEnd = addMinutes(slotStart, duration);
 
-    const hasConflict = busyEvents.some(event =>
+    const hasConflict = busyEvents.some((event) =>
       overlaps(slotStart, slotEnd, event.start, event.end)
     );
 
@@ -103,14 +130,18 @@ async function getAvailableSlots(date, duration) {
   return availableSlots;
 }
 
+app.get("/", (req, res) => {
+  res.status(200).send("Booking API is running");
+});
+
 app.get("/api/availability", async (req, res) => {
   try {
     const duration = Number(req.query.duration);
 
-    if (!duration) {
+    if (!duration || duration <= 0) {
       return res.status(400).json({
         ok: false,
-        message: "Brak duration"
+        message: "Brak poprawnego duration"
       });
     }
 
@@ -138,7 +169,7 @@ app.get("/api/availability", async (req, res) => {
       availableDates
     });
   } catch (error) {
-    console.error("Availability error:", error);
+    console.error("Availability error:", error?.response?.data || error.message || error);
     return res.status(500).json({
       ok: false,
       message: "Nie udało się pobrać dostępnych dat"
@@ -151,7 +182,7 @@ app.get("/api/availability/slots", async (req, res) => {
     const { date } = req.query;
     const duration = Number(req.query.duration);
 
-    if (!date || !duration) {
+    if (!date || !isValidDateString(date) || !duration || duration <= 0) {
       return res.status(400).json({
         ok: false,
         message: "Brakuje date lub duration"
@@ -165,7 +196,7 @@ app.get("/api/availability/slots", async (req, res) => {
       availableSlots
     });
   } catch (error) {
-    console.error("Slots error:", error);
+    console.error("Slots error:", error?.response?.data || error.message || error);
     return res.status(500).json({
       ok: false,
       message: "Nie udało się pobrać wolnych godzin"
@@ -175,7 +206,7 @@ app.get("/api/availability/slots", async (req, res) => {
 
 app.post("/api/bookings", async (req, res) => {
   try {
-    const { name, phone, service, price, duration, date, time } = req.body;
+    const { name, phone, service, price, duration, date, time, notes } = req.body;
 
     if (!name || !phone || !service || !price || !duration || !date || !time) {
       return res.status(400).json({
@@ -184,7 +215,22 @@ app.post("/api/bookings", async (req, res) => {
       });
     }
 
-    const freshSlots = await getAvailableSlots(date, Number(duration));
+    if (!isValidDateString(date) || !isValidTimeString(time)) {
+      return res.status(400).json({
+        ok: false,
+        message: "Niepoprawna data lub godzina"
+      });
+    }
+
+    const numericDuration = Number(duration);
+    if (!numericDuration || numericDuration <= 0) {
+      return res.status(400).json({
+        ok: false,
+        message: "Niepoprawny czas usługi"
+      });
+    }
+
+    const freshSlots = await getAvailableSlots(date, numericDuration);
 
     if (!freshSlots.includes(time)) {
       return res.status(409).json({
@@ -194,19 +240,32 @@ app.post("/api/bookings", async (req, res) => {
     }
 
     const startDateTime = combineDateAndTime(date, time);
-    const endDateTime = addMinutes(startDateTime, Number(duration));
+    const endDateTime = addMinutes(startDateTime, numericDuration);
+
+    if (Number.isNaN(startDateTime.getTime()) || Number.isNaN(endDateTime.getTime())) {
+      return res.status(400).json({
+        ok: false,
+        message: "Nie udało się przetworzyć daty lub godziny"
+      });
+    }
+
+    const cleanedPrice = normalizePrice(price);
 
     const event = {
       summary: `${service} — ${name}`,
-      description:
-        `Nowa rezerwacja\n` +
-        `Imię: ${name}\n` +
-        `Telefon: ${phone}\n` +
-        `Usługa: ${service}\n` +
-        `Cena: ${price} zł\n` +
-        `Czas: ${duration} min\n` +
-        `Data: ${date}\n` +
+      description: [
+        "Nowa rezerwacja",
+        `Imię: ${name}`,
+        `Telefon: ${phone}`,
+        `Usługa: ${service}`,
+        cleanedPrice ? `Cena: ${cleanedPrice} zł` : null,
+        `Czas: ${numericDuration} min`,
+        `Data: ${date}`,
         `Godzina: ${time}`,
+        notes ? `Uwagi: ${notes}` : null
+      ]
+        .filter(Boolean)
+        .join("\n"),
       start: {
         dateTime: startDateTime.toISOString(),
         timeZone: TIMEZONE
@@ -222,14 +281,14 @@ app.post("/api/bookings", async (req, res) => {
       requestBody: event
     });
 
-    return res.json({
+    return res.status(200).json({
       ok: true,
       message: "Rezerwacja została zapisana",
       eventId: createdEvent.data.id,
       eventLink: createdEvent.data.htmlLink
     });
   } catch (error) {
-    console.error("Booking error:", error);
+    console.error("Booking error:", error?.response?.data || error.message || error);
     return res.status(500).json({
       ok: false,
       message: "Nie udało się utworzyć rezerwacji"
@@ -237,6 +296,6 @@ app.post("/api/bookings", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server started on http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server started on port ${PORT}`);
 });
