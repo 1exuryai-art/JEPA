@@ -1711,6 +1711,234 @@
     renderSlots();
     renderBindings();
     updateStepButtons();
+
+    @media (max-width: 640px) {
+  body {
+    padding: 14px 8px 24px;
+  }
+
+  .app {
+    padding: 14px;
+    border-radius: 24px;
+  }
+
+  .topbar {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .eyebrow {
+    margin-bottom: 8px;
+    font-size: 10px;
+    letter-spacing: .16em;
+  }
+
+  h1 {
+    font-size: clamp(28px, 8vw, 38px);
+    line-height: 1.02;
+  }
+
+  h2 {
+    font-size: clamp(22px, 6vw, 30px);
+  }
+
+  .lead {
+    margin-top: 10px;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .step-indicator {
+    min-width: unset;
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  .summary-box,
+  .service-card,
+  .calendar-box,
+  .slots-box,
+  .success-box,
+  .review-item,
+  .accordion,
+  .inline-selection,
+  .notice,
+  .barber-question-box,
+  .barber-choice-shell,
+  .barber-carousel {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .accordion {
+    padding: 12px;
+  }
+
+  .service-option {
+    padding: 13px 14px;
+  }
+
+  .service-option strong {
+    font-size: 15px;
+  }
+
+  .service-option small {
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  input,
+  button {
+    min-height: 48px;
+    font-size: 15px;
+  }
+
+  .pill {
+    min-height: 32px;
+    font-size: 12px;
+    padding: 0 10px;
+  }
+
+  .barber-carousel-header {
+    gap: 8px;
+  }
+
+  .barber-carousel-header h3 {
+    font-size: 18px;
+    line-height: 1.15;
+  }
+
+  .barber-carousel-header p {
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .barber-track-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .carousel-arrow {
+    min-height: 44px;
+    width: 100%;
+    border-radius: 14px;
+    font-size: 20px;
+    padding: 0;
+  }
+
+  .barber-card {
+    padding: 12px;
+    gap: 10px;
+    border-radius: 18px;
+  }
+
+  .barber-image {
+    aspect-ratio: 1 / 1;
+    max-height: 260px;
+    border-radius: 16px;
+    padding: 10px;
+  }
+
+  .barber-image img {
+    border-radius: 12px;
+  }
+
+  .barber-badge {
+    left: 8px;
+    bottom: 8px;
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+
+  .barber-copy {
+    gap: 8px;
+  }
+
+  .barber-copy h3 {
+    font-size: 18px;
+    line-height: 1.05;
+  }
+
+  .barber-copy p {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .barber-langs {
+    gap: 6px;
+  }
+
+  .barber-langs span {
+    min-height: 28px;
+    padding: 0 8px;
+    font-size: 11px;
+  }
+
+  .barber-actions {
+    gap: 8px;
+  }
+
+  .barber-actions button {
+    width: 100%;
+  }
+
+  .barber-dots {
+    gap: 6px;
+    margin-top: 2px;
+  }
+
+  .barber-dots button {
+    width: 10px;
+    min-height: 10px;
+  }
+
+  .inline-selection {
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .inline-selection .meta strong {
+    font-size: 16px;
+  }
+
+  .inline-selection .meta span {
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .inline-actions,
+  .actions,
+  .choice-row {
+    gap: 8px;
+  }
+
+  .inline-actions > *,
+  .actions > *,
+  .choice-row > * {
+    width: 100%;
+  }
+
+  .calendar-grid,
+  .slots-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .date-btn,
+  .slot-btn {
+    min-height: 46px;
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .review-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+    
   </script>
 </body>
 </html>
