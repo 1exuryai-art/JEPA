@@ -6,43 +6,69 @@
   <title>Rezerwacja online</title>
   <style>
     * { box-sizing: border-box; }
+
     :root {
-      --bg: #0a0a0a;
-      --panel: rgba(255,255,255,0.06);
-      --line: rgba(255,255,255,0.14);
-      --text: #f6f6f6;
-      --muted: #b8b8b8;
-      --soft: #8a8a8a;
-      --error: #ffb0b0;
-      --success: #d9ffd9;
-      --shadow: 0 20px 80px rgba(0,0,0,0.45);
-      --transition: 240ms ease;
+      --bg-1: #050505;
+      --bg-2: #0c0c0c;
+      --panel: rgba(255,255,255,0.045);
+      --panel-strong: rgba(255,255,255,0.075);
+      --line: rgba(255,255,255,0.12);
+      --line-strong: rgba(255,255,255,0.2);
+      --text: #f4f4f4;
+      --muted: #b7b7b7;
+      --soft: #8f8f8f;
+      --error: #ffb5b5;
+      --success: #d8ffd8;
+      --shadow-lg: 0 24px 80px rgba(0,0,0,0.55);
+      --shadow-md: 0 14px 34px rgba(0,0,0,0.34);
+      --glow-soft: 0 0 0 1px rgba(255,255,255,0.14), 0 0 24px rgba(255,255,255,0.06);
+      --glow-selected: 0 0 0 1px rgba(255,255,255,0.42), 0 0 28px rgba(255,255,255,0.12), inset 0 1px 0 rgba(255,255,255,0.16);
+      --radius-xl: 30px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --transition-fast: 180ms ease;
+      --transition: 280ms ease;
     }
+
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: Inter, Arial, sans-serif;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at top left, rgba(255,255,255,0.08), transparent 26%),
-        radial-gradient(circle at bottom right, rgba(255,255,255,0.06), transparent 28%),
-        linear-gradient(135deg, #050505 0%, #101010 40%, #050505 100%);
-      padding: 32px 16px;
+        radial-gradient(circle at 15% 10%, rgba(255,255,255,0.07), transparent 24%),
+        radial-gradient(circle at 85% 0%, rgba(255,255,255,0.06), transparent 28%),
+        radial-gradient(circle at 80% 85%, rgba(255,255,255,0.04), transparent 26%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 40%, #040404);
+      padding: 28px 14px 42px;
     }
 
     .shell {
-      max-width: 880px;
+      max-width: 940px;
       margin: 0 auto;
     }
 
     .app {
       border: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+      border-radius: 36px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.025));
       backdrop-filter: blur(18px);
-      border-radius: 32px;
-      box-shadow: var(--shadow);
-      padding: 28px;
+      box-shadow: var(--shadow-lg);
+      padding: 34px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .app::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent 18%, transparent 80%, rgba(255,255,255,0.02));
+      opacity: .9;
     }
 
     .topbar {
@@ -50,70 +76,55 @@
       justify-content: space-between;
       align-items: flex-start;
       gap: 18px;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
     }
 
     .eyebrow {
       color: var(--muted);
       font-size: 12px;
-      letter-spacing: .18em;
+      letter-spacing: .22em;
       text-transform: uppercase;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     h1, h2, h3, p { margin: 0; }
 
     h1 {
-      font-size: clamp(30px, 4vw, 48px);
-      line-height: 1;
-      letter-spacing: -0.04em;
+      font-size: clamp(40px, 6vw, 66px);
+      line-height: .98;
+      letter-spacing: -0.055em;
       font-weight: 700;
+      text-wrap: balance;
+      max-width: 700px;
     }
 
     h2 {
-      font-size: clamp(22px, 3vw, 30px);
-      line-height: 1.06;
-      letter-spacing: -0.03em;
-      font-weight: 600;
+      font-size: clamp(26px, 4vw, 46px);
+      line-height: 1.03;
+      letter-spacing: -0.045em;
+      font-weight: 700;
     }
 
     .lead {
-      margin-top: 12px;
+      margin-top: 16px;
       color: var(--muted);
-      max-width: 620px;
-      line-height: 1.6;
+      font-size: clamp(17px, 2vw, 22px);
+      line-height: 1.65;
+      max-width: 700px;
     }
 
     .step-indicator {
-      padding: 12px 16px;
-      border: 1px solid var(--line);
+      min-width: 126px;
+      text-align: center;
+      padding: 14px 18px;
       border-radius: 999px;
+      border: 1px solid var(--line);
       background: rgba(255,255,255,0.05);
       color: var(--muted);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
       white-space: nowrap;
-    }
-
-    .scene-note,
-    .summary-box,
-    .service-card,
-    .calendar-box,
-    .slots-box,
-    .success-box,
-    .ui-block,
-    .review-item,
-    .notice {
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-      border-radius: 24px;
-      padding: 18px;
-      backdrop-filter: blur(10px);
-    }
-
-    .scene-note,
-    .notice {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.65;
     }
 
     .hidden { display: none !important; }
@@ -122,93 +133,238 @@
       display: none;
       flex-direction: column;
       gap: 18px;
-      margin-top: 20px;
+      position: relative;
+      z-index: 1;
+      animation: stepEnter .42s ease;
     }
 
     .step.active { display: flex; }
 
-    label {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      font-size: 14px;
-      color: var(--muted);
+    @keyframes stepEnter {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    input, button {
-      min-height: 52px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.12);
-      font-size: 15px;
-      transition: var(--transition);
+    .section-card,
+    .summary-box,
+    .service-card,
+    .calendar-box,
+    .slots-box,
+    .success-box,
+    .review-item,
+    .accordion,
+    .inline-selection,
+    .notice {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.03));
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow-md);
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition), background var(--transition);
     }
 
-    input {
-      width: 100%;
-      padding: 14px 16px;
-      background: rgba(255,255,255,0.98);
-      color: #111;
-      outline: none;
-    }
+    .summary-box, .service-card, .notice { line-height: 1.65; }
 
-    button {
-      border: 1px solid rgba(255,255,255,0.16);
-      padding: 12px 18px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(220,220,220,0.94));
-      color: #0b0b0b;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    button[disabled] {
-      opacity: .42;
-      cursor: not-allowed;
-    }
-
-    .ghost-btn {
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
-    }
-
-    .actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 4px;
-    }
-
+    .muted { color: var(--muted); }
+    .soft { color: var(--soft); }
     .error {
       min-height: 18px;
       color: var(--error);
       font-size: 13px;
     }
-
     .success-text { color: var(--success); }
-    .muted { color: var(--muted); }
-    .soft { color: var(--soft); }
+
+    .pill-row,
+    .actions,
+    .inline-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      font-size: 13px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    input,
+    button {
+      min-height: 54px;
+      border-radius: var(--radius-sm);
+      transition: transform var(--transition-fast), background var(--transition), border-color var(--transition), box-shadow var(--transition), opacity var(--transition-fast);
+      font-family: inherit;
+      font-size: 15px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(225,225,225,0.96));
+      color: #111;
+      outline: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.45);
+    }
+
+    input:focus {
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.28), 0 0 0 4px rgba(255,255,255,0.08);
+    }
+
+    button {
+      border: 1px solid rgba(255,255,255,0.14);
+      padding: 12px 18px;
+      background: linear-gradient(180deg, rgba(252,252,252,0.98), rgba(220,220,220,0.94));
+      color: #0f0f0f;
+      font-weight: 650;
+      cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
+    }
+
+    button:hover:not([disabled]) {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+
+    button:active:not([disabled]) {
+      transform: translateY(0);
+    }
+
+    button[disabled] {
+      opacity: .42;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .ghost-btn {
+      background: rgba(255,255,255,0.045);
+      color: var(--text);
+      border-color: rgba(255,255,255,0.12);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .pulse-cta:not([disabled]) { animation: pulseGlow 2.7s ease-in-out infinite; }
+    .pulse-fast:not([disabled]) { animation: pulseGlowFast 1.15s ease-in-out infinite; }
+    .pulse-slow:not([disabled]) { animation: pulseGlowSlow 4.2s ease-in-out infinite; }
+
+    @keyframes pulseGlow {
+      0%,100% { box-shadow: 0 0 0 1px rgba(255,255,255,0.16), 0 0 0 rgba(255,255,255,0), inset 0 1px 0 rgba(255,255,255,0.55); }
+      50% { box-shadow: 0 0 0 1px rgba(255,255,255,0.22), 0 0 26px rgba(255,255,255,0.16), inset 0 1px 0 rgba(255,255,255,0.64); }
+    }
+
+    @keyframes pulseGlowFast {
+      0%,100% { box-shadow: 0 0 0 1px rgba(255,255,255,0.16), 0 0 0 rgba(255,255,255,0), inset 0 1px 0 rgba(255,255,255,0.55); }
+      50% { box-shadow: 0 0 0 1px rgba(255,255,255,0.3), 0 0 34px rgba(255,255,255,0.22), inset 0 1px 0 rgba(255,255,255,0.72); }
+    }
+
+    @keyframes pulseGlowSlow {
+      0%,100% { box-shadow: 0 0 0 1px rgba(255,255,255,0.18), 0 0 10px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.55); }
+      50% { box-shadow: 0 0 0 1px rgba(255,255,255,0.28), 0 0 34px rgba(255,255,255,0.14), inset 0 1px 0 rgba(255,255,255,0.66); }
+    }
 
     .summary-box,
     .service-meta {
       display: grid;
-      gap: 10px;
+      gap: 8px;
     }
 
-    .service-groups {
+    .accordion-list {
       display: grid;
-      gap: 16px;
+      gap: 14px;
     }
 
-    .group-title {
-      font-size: 17px;
-      font-weight: 700;
-      margin-bottom: 6px;
+    .accordion {
+      padding: 14px;
+      overflow: hidden;
+    }
+
+    .accordion-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      background: transparent;
+      border: 0;
+      color: var(--text);
+      padding: 0;
+      min-height: auto;
+      box-shadow: none;
+      text-align: left;
+    }
+
+    .accordion-header:hover { transform: none; box-shadow: none; }
+
+    .accordion-title {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .accordion-title strong {
+      font-size: 18px;
       letter-spacing: -0.02em;
     }
 
-    .group-note {
-      font-size: 13px;
+    .accordion-title span {
       color: var(--muted);
-      margin-bottom: 12px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .accordion-arrow {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      flex-shrink: 0;
+      transition: transform var(--transition), background var(--transition), color var(--transition);
+    }
+
+    .accordion.open .accordion-arrow {
+      transform: rotate(180deg);
+      color: var(--text);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .accordion-body {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows var(--transition), opacity var(--transition);
+      opacity: 0;
+    }
+
+    .accordion.open .accordion-body {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      margin-top: 14px;
+    }
+
+    .accordion-inner {
+      overflow: hidden;
     }
 
     .service-list {
@@ -220,28 +376,59 @@
     .service-option {
       width: 100%;
       text-align: left;
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.045);
       color: var(--text);
       border-color: rgba(255,255,255,0.1);
+      padding: 16px 18px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .service-option.selected,
-    .date-btn.selected,
-    .slot-btn.selected {
-      background: linear-gradient(180deg, rgba(255,255,255,1), rgba(214,214,214,0.96));
-      color: #111;
-      border-color: rgba(255,255,255,0.5);
-    }
+    .service-option strong { font-size: 17px; line-height: 1.2; }
 
     .service-option small {
       display: block;
       color: var(--muted);
-      margin-top: 5px;
+      margin-top: 6px;
+      font-size: 14px;
+      font-weight: 500;
     }
 
-    .service-option.selected small {
-      color: rgba(0,0,0,0.72);
+    .service-option.selected,
+    .date-btn.selected,
+    .slot-btn.selected,
+    .selected-glow {
+      border-color: rgba(255,255,255,0.32) !important;
+      box-shadow: var(--glow-selected) !important;
+      background: linear-gradient(180deg, rgba(255,255,255,0.97), rgba(220,220,220,0.95)) !important;
+      color: #111 !important;
     }
+
+    .service-option.selected small,
+    .date-btn.selected small,
+    .slot-btn.selected small { color: rgba(0,0,0,0.7); }
+
+    .inline-selection {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .inline-selection .meta {
+      min-width: 0;
+      flex: 1;
+      display: grid;
+      gap: 6px;
+    }
+
+    .inline-selection .meta strong {
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .inline-selection .meta span { color: var(--muted); }
 
     .calendar-grid,
     .slots-grid {
@@ -254,9 +441,15 @@
     .date-btn,
     .slot-btn {
       width: 100%;
-      background: rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.045);
       color: var(--text);
       border-color: rgba(255,255,255,0.1);
+      min-height: 58px;
+    }
+
+    .date-btn.inactive {
+      opacity: .36;
+      pointer-events: none;
     }
 
     .review-grid {
@@ -267,7 +460,22 @@
 
     .review-item strong {
       display: inline-block;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
+      font-size: 17px;
+    }
+
+    .success-box {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .success-box::after {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      box-shadow: 0 0 32px rgba(168,255,183,0.08);
+      pointer-events: none;
     }
 
     .modal-backdrop {
@@ -277,49 +485,49 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
-      background: rgba(0, 0, 0, 0.68);
-      backdrop-filter: blur(8px);
-      z-index: 20;
+      background: rgba(0, 0, 0, 0.74);
+      backdrop-filter: blur(10px);
+      z-index: 40;
     }
 
-    .modal-backdrop.open { display: flex; }
+    .modal-backdrop.open { display: flex; animation: fadeIn .22s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
 
     .modal {
       width: 100%;
-      max-width: 560px;
+      max-width: 580px;
       border-radius: 28px;
       border: 1px solid rgba(255,255,255,0.16);
-      background: linear-gradient(180deg, rgba(20,20,20,0.98), rgba(11,11,11,0.95));
+      background: linear-gradient(180deg, rgba(18,18,18,0.98), rgba(10,10,10,0.96));
       color: var(--text);
       padding: 22px;
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-lg);
+      animation: modalUp .24s ease;
+    }
+
+    @keyframes modalUp {
+      from { opacity: 0; transform: translateY(8px) scale(.985); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .list-clean {
-      margin: 12px 0 0;
+      margin: 14px 0 0;
       padding-left: 18px;
-      line-height: 1.8;
       color: var(--muted);
+      line-height: 1.9;
     }
 
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      min-height: 36px;
-      padding: 0 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.04);
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    @media (max-width: 720px) {
-      .app { padding: 20px; border-radius: 24px; }
+    @media (max-width: 760px) {
+      .app { padding: 22px; border-radius: 28px; }
       .topbar { flex-direction: column; }
       .review-grid { grid-template-columns: 1fr; }
+      .inline-selection { align-items: stretch; }
       .actions > * { width: 100%; }
+      .inline-actions > * { width: 100%; }
     }
   </style>
 </head>
@@ -328,25 +536,15 @@
     <main class="app">
       <div class="topbar">
         <div>
-          <div class="eyebrow">rezerwacja online</div>
+          <div class="eyebrow">Rezerwacja online</div>
           <h1>Cyfrowa rezerwacja<br />w estetyce black & white</h1>
-          <p class="lead">
-            Formularz prowadzi użytkownika krok po kroku, zapisuje dane,
-            automatycznie pobiera dostępne terminy i przygotowuje rezerwację do wysłania na serwer.
-          </p>
+          <p class="lead">Wybierz usługę, termin i potwierdź wizytę w kilku prostych krokach.</p>
         </div>
         <div class="step-indicator" id="stepIndicator">Krok 1 z 7</div>
       </div>
 
-      <div class="scene-note">
-        Finalniejszy kierunek: cinematic minimalism, miękkie szkło, kontrast światła i cienia,
-        gotowa logika pod automatyczne terminy. Без твоих картинок и PNG.
-      </div>
-
       <section class="step active" data-step="1">
-        <h2>[Krok 1/7] Dane kontaktowe</h2>
-        <p class="muted">Cześć 👋 Zarezerwuj wizytę w 1 minutę.</p>
-
+        <h2>Dane kontaktowe</h2>
         <label>
           Imię
           <input id="nameInput" type="text" placeholder="Wpisz imię" autocomplete="name" />
@@ -360,82 +558,58 @@
         </label>
 
         <div class="actions">
-          <button id="step1Next" disabled>Przejdź do rezerwacji</button>
+          <button id="step1Next" class="pulse-cta" disabled>Przejdź do rezerwacji</button>
         </div>
       </section>
 
       <section class="step" data-step="2">
-        <h2>[Krok 2/7] Wybór usługi</h2>
+        <h2>Wybór usługi</h2>
 
         <div class="summary-box">
           <p><strong>Imię:</strong> <span data-bind="name">—</span></p>
           <p><strong>Telefon:</strong> <span data-bind="phone">—</span></p>
         </div>
 
-        <div class="service-groups">
-          <div class="ui-block">
-            <div class="group-title">Młodszy Barber</div>
-            <div class="group-note">4 usługi</div>
-            <div class="service-list" id="juniorServiceList"></div>
-          </div>
+        <div class="accordion-list" id="serviceAccordionList"></div>
 
-          <div class="ui-block">
-            <div class="group-title">Strzyżenie, golenie</div>
-            <div class="group-note">12 usług</div>
-            <div class="service-list" id="mainServiceList"></div>
+        <div class="inline-selection hidden" id="selectedServiceCard">
+          <div class="meta">
+            <strong>Wybrana usługa: <span data-bind="serviceName">—</span></strong>
+            <span><span data-bind="priceText">—</span> • <span data-bind="durationText">—</span></span>
           </div>
-
-          <div class="ui-block">
-            <div class="group-title">COMBO</div>
-            <div class="group-note">8 usług</div>
-            <div class="service-list" id="comboServiceList"></div>
-          </div>
-
-          <div class="ui-block">
-            <div class="group-title">Odsiwianie</div>
-            <div class="group-note">2 usługi</div>
-            <div class="service-list" id="greyServiceList"></div>
-          </div>
-        </div>
-
-        <div class="service-card hidden" id="selectedServiceCard">
-          <p><strong>Wybrana usługa:</strong> <span data-bind="serviceName">—</span></p>
-          <div class="actions">
+          <div class="inline-actions">
             <button type="button" id="openPriceModal" class="ghost-btn">Cennik</button>
-            <button type="button" id="step2Next" disabled>Dalej</button>
+            <button type="button" id="step2InlineNext" class="pulse-cta" disabled>Dalej</button>
           </div>
         </div>
 
         <div class="actions">
           <button type="button" class="back-btn ghost-btn">Wstecz</button>
+          <button type="button" id="step2Next" class="pulse-cta" disabled>Dalej</button>
         </div>
       </section>
 
       <section class="step" data-step="3">
-        <h2>[Krok 3/7] Potwierdzenie usługi</h2>
+        <h2>Potwierdzenie usługi</h2>
 
-        <div class="service-card service-meta">
+        <div class="service-card service-meta selected-glow">
           <p><strong>Nazwa:</strong> <span data-bind="serviceName">—</span></p>
           <p><strong>Czas:</strong> <span data-bind="durationText">—</span></p>
           <p><strong>Cena:</strong> <span data-bind="priceText">—</span></p>
         </div>
 
-        <div class="notice">
-          Po przejściu dalej formularz automatycznie pobierze dostępne daty dla tej usługi.
-        </div>
-
         <div class="actions">
           <button type="button" id="changeServiceBtn" class="ghost-btn">Zmień usługę</button>
-          <button type="button" id="step3Next">Dalej</button>
+          <button type="button" id="step3Next" class="pulse-cta">Dalej</button>
         </div>
       </section>
 
       <section class="step" data-step="4">
-        <h2>[Krok 4/7] Wybór daty</h2>
+        <h2>Wybór daty</h2>
 
         <div class="calendar-box">
-          <div class="actions" style="margin-top: 0; margin-bottom: 8px;">
-            <span class="pill" id="monthLabel">Kwiecień 2026</span>
+          <div class="pill-row" style="margin-bottom: 8px;">
+            <span class="pill" id="monthLabel">Miesiąc</span>
             <span class="pill" id="availabilityStatus">Ładowanie dat...</span>
           </div>
           <div class="calendar-grid" id="calendarGrid"></div>
@@ -444,15 +618,15 @@
 
         <div class="actions">
           <button type="button" class="back-btn ghost-btn">Wstecz</button>
-          <button type="button" id="step4Next" disabled>Dalej</button>
+          <button type="button" id="step4Next" class="pulse-cta" disabled>Dalej</button>
         </div>
       </section>
 
       <section class="step" data-step="5">
-        <h2>[Krok 5/7] Wybór godziny</h2>
+        <h2>Wybór godziny</h2>
 
         <div class="slots-box">
-          <div class="actions" style="margin-top: 0; margin-bottom: 8px;">
+          <div class="pill-row" style="margin-bottom: 8px;">
             <span class="pill">Wybrana data: <span data-bind="dateText">—</span></span>
             <span class="pill" id="slotsStatus">Wybierz datę</span>
           </div>
@@ -463,12 +637,12 @@
 
         <div class="actions">
           <button type="button" class="back-btn ghost-btn">Wstecz</button>
-          <button type="button" id="step5Next" disabled>Dalej</button>
+          <button type="button" id="step5Next" class="pulse-cta" disabled>Dalej</button>
         </div>
       </section>
 
       <section class="step" data-step="6">
-        <h2>[Krok 6/7] Potwierdzenie rezerwacji</h2>
+        <h2>Potwierdzenie rezerwacji</h2>
 
         <div class="review-grid">
           <div class="review-item"><strong>Imię</strong><br /><span data-bind="name">—</span></div>
@@ -482,14 +656,14 @@
 
         <div class="actions">
           <button type="button" class="back-btn ghost-btn">Wstecz</button>
-          <button type="button" id="confirmBookingBtn">Potwierdź rezerwację</button>
+          <button type="button" id="confirmBookingBtn" class="pulse-fast">Potwierdź rezerwację</button>
         </div>
 
         <div class="error" id="submitError"></div>
       </section>
 
       <section class="step" data-step="7">
-        <h2>[Krok 7/7] Gotowe</h2>
+        <h2>Gotowe</h2>
 
         <div class="success-box">
           <p class="success-text"><strong>Rezerwacja została przyjęta ✅</strong></p>
@@ -500,7 +674,8 @@
         </div>
 
         <div class="actions">
-          <button type="button" id="instagramBtn">Wróć na Instagram</button>
+          <button type="button" id="instagramBtn" class="pulse-slow">Wróć na Instagram</button>
+          <button type="button" id="routeBtn" class="ghost-btn">Jak dojechać?</button>
           <button type="button" id="contactBtn" class="ghost-btn">Skontaktuj się</button>
         </div>
       </section>
@@ -523,6 +698,7 @@
     const API_BASE_URL = "";
     const INSTAGRAM_URL = "https://instagram.com/";
     const CONTACT_PHONE = "+48123456789";
+    const MAPS_URL = "https://maps.google.com/?q=Wrocław";
 
     const state = {
       step: 1,
@@ -537,7 +713,8 @@
       availableSlots: [],
       loadingDates: false,
       loadingSlots: false,
-      submitting: false
+      submitting: false,
+      openCategory: null
     };
 
     const services = [
@@ -572,6 +749,8 @@
       { category: "Odsiwianie", name: "Odsiwianie brody", price: 90, duration: 30 }
     ];
 
+    const serviceCategories = ["Młodszy Barber", "Strzyżenie, golenie", "COMBO", "Odsiwianie"];
+
     const stepIndicator = document.getElementById("stepIndicator");
     const steps = [...document.querySelectorAll(".step")];
     const nameInput = document.getElementById("nameInput");
@@ -580,6 +759,7 @@
     const phoneError = document.getElementById("phoneError");
     const step1Next = document.getElementById("step1Next");
     const selectedServiceCard = document.getElementById("selectedServiceCard");
+    const step2InlineNext = document.getElementById("step2InlineNext");
     const step2Next = document.getElementById("step2Next");
     const step4Next = document.getElementById("step4Next");
     const step5Next = document.getElementById("step5Next");
@@ -595,6 +775,7 @@
     const slotsStatus = document.getElementById("slotsStatus");
     const monthLabel = document.getElementById("monthLabel");
     const confirmBookingBtn = document.getElementById("confirmBookingBtn");
+    const serviceAccordionList = document.getElementById("serviceAccordionList");
 
     function formatPhone(rawValue) {
       const digits = rawValue.replace(/\D/g, "");
@@ -640,6 +821,10 @@
       return months[monthNumber - 1] || "Miesiąc";
     }
 
+    function getServiceByName(name) {
+      return services.find(service => service.name === name) || null;
+    }
+
     function renderBindings() {
       document.querySelectorAll('[data-bind="name"]').forEach(el => el.textContent = state.name || "—");
       document.querySelectorAll('[data-bind="phone"]').forEach(el => el.textContent = state.phone || "—");
@@ -662,12 +847,12 @@
 
     function updateStepButtons() {
       const validStep1 = isValidName(state.name) && isValidPhone(state.phone);
-      step1Next.disabled = !validStep1;
-
       const hasService = Boolean(state.serviceName);
-      selectedServiceCard.classList.toggle("hidden", !hasService);
-      step2Next.disabled = !hasService;
 
+      step1Next.disabled = !validStep1;
+      selectedServiceCard.classList.toggle("hidden", !hasService);
+      step2InlineNext.disabled = !hasService;
+      step2Next.disabled = !hasService;
       step4Next.disabled = !Boolean(state.date) || state.loadingDates;
       step5Next.disabled = !Boolean(state.time) || state.loadingSlots;
       confirmBookingBtn.disabled = state.submitting;
@@ -709,49 +894,6 @@
       )).join("");
     }
 
-    function renderServiceButtons() {
-      const groups = {
-        "Młodszy Barber": document.getElementById("juniorServiceList"),
-        "Strzyżenie, golenie": document.getElementById("mainServiceList"),
-        "COMBO": document.getElementById("comboServiceList"),
-        "Odsiwianie": document.getElementById("greyServiceList")
-      };
-
-      Object.values(groups).forEach(container => container.innerHTML = "");
-
-      services.forEach(service => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "service-option";
-        btn.innerHTML = `
-          <strong>${service.name}</strong>
-          <small>${formatPrice(service.price)} • ${formatDuration(service.duration)}</small>
-        `;
-
-        if (state.serviceName === service.name) {
-          btn.classList.add("selected");
-        }
-
-        btn.addEventListener("click", () => {
-          const previousService = state.serviceName;
-          state.serviceName = service.name;
-          state.price = service.price;
-          state.duration = service.duration;
-
-          if (previousService !== service.name) {
-            resetAvailabilityState();
-          }
-
-          renderServiceButtons();
-          renderBindings();
-          updatePriceModal();
-          updateStepButtons();
-        });
-
-        groups[service.category].appendChild(btn);
-      });
-    }
-
     function resetAvailabilityState() {
       state.date = "";
       state.time = "";
@@ -760,6 +902,79 @@
       renderCalendar();
       renderSlots();
       updateStepButtons();
+    }
+
+    function selectService(service) {
+      const previousService = state.serviceName;
+      state.serviceName = service.name;
+      state.price = service.price;
+      state.duration = service.duration;
+      state.openCategory = service.category;
+
+      if (previousService !== service.name) {
+        resetAvailabilityState();
+      }
+
+      renderServiceAccordion();
+      renderBindings();
+      updatePriceModal();
+      updateStepButtons();
+      selectedServiceCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    function toggleCategory(category) {
+      state.openCategory = state.openCategory === category ? null : category;
+      renderServiceAccordion();
+    }
+
+    function renderServiceAccordion() {
+      serviceAccordionList.innerHTML = "";
+
+      serviceCategories.forEach(category => {
+        const items = services.filter(service => service.category === category);
+        const isOpen = state.openCategory === category;
+
+        const accordion = document.createElement("div");
+        accordion.className = `accordion ${isOpen ? "open" : ""}`;
+
+        const header = document.createElement("button");
+        header.type = "button";
+        header.className = "accordion-header";
+        header.innerHTML = `
+          <span class="accordion-title">
+            <strong>${category}</strong>
+            <span>${items.length} usług</span>
+          </span>
+          <span class="accordion-arrow">⌄</span>
+        `;
+        header.addEventListener("click", () => toggleCategory(category));
+
+        const body = document.createElement("div");
+        body.className = "accordion-body";
+        const inner = document.createElement("div");
+        inner.className = "accordion-inner";
+
+        const list = document.createElement("div");
+        list.className = "service-list";
+
+        items.forEach(service => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = `service-option ${state.serviceName === service.name ? "selected" : ""}`;
+          btn.innerHTML = `
+            <strong>${service.name}</strong>
+            <small>${formatPrice(service.price)} • ${formatDuration(service.duration)}</small>
+          `;
+          btn.addEventListener("click", () => selectService(service));
+          list.appendChild(btn);
+        });
+
+        inner.appendChild(list);
+        body.appendChild(inner);
+        accordion.appendChild(header);
+        accordion.appendChild(body);
+        serviceAccordionList.appendChild(accordion);
+      });
     }
 
     function renderCalendar() {
@@ -786,12 +1001,8 @@
         const [, , day] = date.split("-");
         const btn = document.createElement("button");
         btn.type = "button";
-        btn.className = "date-btn";
+        btn.className = `date-btn ${state.date === date ? "selected" : ""}`;
         btn.textContent = day;
-
-        if (state.date === date) {
-          btn.classList.add("selected");
-        }
 
         btn.addEventListener("click", async () => {
           state.date = date;
@@ -828,12 +1039,8 @@
       state.availableSlots.forEach(slot => {
         const btn = document.createElement("button");
         btn.type = "button";
-        btn.className = "slot-btn";
+        btn.className = `slot-btn ${state.time === slot ? "selected" : ""}`;
         btn.textContent = slot;
-
-        if (state.time === slot) {
-          btn.classList.add("selected");
-        }
 
         btn.addEventListener("click", () => {
           state.time = slot;
@@ -934,7 +1141,6 @@
         });
 
         const data = await response.json().catch(() => null);
-
         if (!response.ok || !data?.ok) {
           throw new Error(data?.message || "Błąd serwera");
         }
@@ -948,6 +1154,11 @@
         confirmBookingBtn.textContent = "Potwierdź rezerwację";
         updateStepButtons();
       }
+    }
+
+    function closePriceModal() {
+      priceModalBackdrop.classList.remove("open");
+      priceModalBackdrop.setAttribute("aria-hidden", "true");
     }
 
     nameInput.addEventListener("input", (e) => {
@@ -969,6 +1180,11 @@
     step1Next.addEventListener("click", () => {
       if (!validateStep1(true)) return;
       goToStep(2);
+    });
+
+    step2InlineNext.addEventListener("click", () => {
+      if (!state.serviceName) return;
+      goToStep(3);
     });
 
     step2Next.addEventListener("click", () => {
@@ -1020,11 +1236,6 @@
       if (e.target === priceModalBackdrop) closePriceModal();
     });
 
-    function closePriceModal() {
-      priceModalBackdrop.classList.remove("open");
-      priceModalBackdrop.setAttribute("aria-hidden", "true");
-    }
-
     document.getElementById("instagramBtn").addEventListener("click", () => {
       window.location.href = INSTAGRAM_URL;
     });
@@ -1033,7 +1244,12 @@
       window.location.href = `tel:${CONTACT_PHONE}`;
     });
 
-    renderServiceButtons();
+    document.getElementById("routeBtn").addEventListener("click", () => {
+      window.open(MAPS_URL, "_blank", "noopener,noreferrer");
+    });
+
+    state.openCategory = serviceCategories[0];
+    renderServiceAccordion();
     renderCalendar();
     renderSlots();
     renderBindings();
