@@ -17,6 +17,7 @@ const CALENDAR_ID = process.env.GOOGLE_CALENDAR_ID || "primary";
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname));
 
 const requiredEnv = [
   "GOOGLE_CLIENT_ID",
