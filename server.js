@@ -136,7 +136,7 @@ async function getAvailableSlots(date, duration) {
 }
 
 app.get("/", (req, res) => {
-  res.status(200).send("Booking API is running");
+  res.sendFile(path.join(__dirname, "frontend-index.html"));
 });
 
 app.get("/api/availability", async (req, res) => {
