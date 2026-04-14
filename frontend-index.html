@@ -537,14 +537,15 @@
       <div class="topbar">
         <div>
           <div class="eyebrow">Rezerwacja online</div>
-          <h1>Cyfrowa rezerwacja<br />w estetyce black & white</h1>
-          <p class="lead">Wybierz usługę, termin i potwierdź wizytę w kilku prostych krokach.</p>
+          <h1>Rezerwacja wizyt online</h1>
+          <p class="lead">Bezpośrednio z Instagrama, bez zbędnych wiadomości. Klient wybiera usługę, termin i zapisuje się sam.</p>
         </div>
         <div class="step-indicator" id="stepIndicator">Krok 1 z 7</div>
       </div>
 
       <section class="step active" data-step="1">
         <h2>Dane kontaktowe</h2>
+        <div class="notice">Zostaw dane i przejdź do wyboru terminu.</div>
         <label>
           Imię
           <input id="nameInput" type="text" placeholder="Wpisz imię" autocomplete="name" />
@@ -564,6 +565,7 @@
 
       <section class="step" data-step="2">
         <h2>Wybór usługi</h2>
+        <div class="notice">Wybierz usługę — pokażemy dostępne terminy automatycznie.</div>
 
         <div class="summary-box">
           <p><strong>Imię:</strong> <span data-bind="name">—</span></p>
@@ -591,6 +593,7 @@
 
       <section class="step" data-step="3">
         <h2>Potwierdzenie usługi</h2>
+        <div class="notice">Na podstawie usługi pokażemy tylko dostępne terminy.</div>
 
         <div class="service-card service-meta selected-glow">
           <p><strong>Nazwa:</strong> <span data-bind="serviceName">—</span></p>
@@ -606,6 +609,7 @@
 
       <section class="step" data-step="4">
         <h2>Wybór daty</h2>
+        <div class="notice">Wybierz dzień wizyty.</div>
 
         <div class="calendar-box">
           <div class="pill-row" style="margin-bottom: 8px;">
@@ -624,6 +628,7 @@
 
       <section class="step" data-step="5">
         <h2>Wybór godziny</h2>
+        <div class="notice">Wybierz godzinę wizyty.</div>
 
         <div class="slots-box">
           <div class="pill-row" style="margin-bottom: 8px;">
@@ -643,6 +648,7 @@
 
       <section class="step" data-step="6">
         <h2>Potwierdzenie rezerwacji</h2>
+        <div class="notice">Sprawdź dane i potwierdź rezerwację.</div>
 
         <div class="review-grid">
           <div class="review-item"><strong>Imię</strong><br /><span data-bind="name">—</span></div>
@@ -656,7 +662,7 @@
 
         <div class="actions">
           <button type="button" class="back-btn ghost-btn">Wstecz</button>
-          <button type="button" id="confirmBookingBtn" class="pulse-fast">Potwierdź rezerwację</button>
+          <button type="button" id="confirmBookingBtn" class="pulse-fast">Zarezerwuj termin</button>
         </div>
 
         <div class="error" id="submitError"></div>
@@ -664,9 +670,10 @@
 
       <section class="step" data-step="7">
         <h2>Gotowe</h2>
+        <div class="notice">Twoja rezerwacja została zapisana. W razie potrzeby możesz wrócić na Instagram, zadzwonić albo sprawdzić dojazd.</div>
 
         <div class="success-box">
-          <p class="success-text"><strong>Rezerwacja została przyjęta ✅</strong></p>
+          <p class="success-text"><strong>Wizyta zarezerwowana ✅</strong></p>
           <br />
           <p><strong>Usługa:</strong> <span data-bind="serviceName">—</span></p>
           <p><strong>Data:</strong> <span data-bind="dateText">—</span></p>
@@ -1151,7 +1158,7 @@
         submitError.textContent = error.message || "Nie udało się wysłać rezerwacji. Spróbuj ponownie.";
       } finally {
         state.submitting = false;
-        confirmBookingBtn.textContent = "Potwierdź rezerwację";
+        confirmBookingBtn.textContent = "Zarezerwuj termin";
         updateStepButtons();
       }
     }
