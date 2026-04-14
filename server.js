@@ -9,6 +9,7 @@ dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const TIMEZONE = "Europe/Warsaw";
@@ -32,8 +33,7 @@ if (missingEnv.length > 0) {
 
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-  process.env.GOOGLE_REDIRECT_URI
+  process.env.GOOGLE_CLIENT_SECRET
 );
 
 oauth2Client.setCredentials({
@@ -89,7 +89,11 @@ function normalizePrice(price) {
   return String(price).trim().replace(/\s*zł\s*$/i, "");
 }
 
-async function getBusyEvents(date) {
+function escapeRegExp(value = "") {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+async function getBusyEvents(date, barberId = "", barberName = "") {
   const timeMin = new Date(`${date}T00:00:00+02:00`).toISOString();
   const timeMax = new Date(`${date}T23:59:59+02:00`).toISOString();
 
@@ -101,16 +105,41 @@ async function getBusyEvents(date) {
     orderBy: "startTime"
   });
 
-  return (response.data.items || [])
+  const items = response.data.items || [];
+
+  if (!barberId && !barberName) {
+    return items
+      .filter((event) => event.start?.dateTime && event.end?.dateTime)
+      .map((event) => ({
+        start: new Date(event.start.dateTime),
+        end: new Date(event.end.dateTime)
+      }));
+  }
+
+  const barberIdPattern = barberId
+    ? new RegExp(`Barber ID:\\s*${escapeRegExp(barberId)}`, "i")
+    : null;
+
+  const barberNamePattern = barberName
+    ? new RegExp(`Barber:\\s*${escapeRegExp(barberName)}`, "i")
+    : null;
+
+  return items
     .filter((event) => event.start?.dateTime && event.end?.dateTime)
+    .filter((event) => {
+      const text = `${event.summary || ""}\n${event.description || ""}`;
+      if (barberIdPattern?.test(text)) return true;
+      if (barberNamePattern?.test(text)) return true;
+      return false;
+    })
     .map((event) => ({
       start: new Date(event.start.dateTime),
       end: new Date(event.end.dateTime)
     }));
 }
 
-async function getAvailableSlots(date, duration) {
-  const busyEvents = await getBusyEvents(date);
+async function getAvailableSlots(date, duration, barberId = "", barberName = "") {
+  const busyEvents = await getBusyEvents(date, barberId, barberName);
 
   const startMinutes = parseTimeToMinutes(WORKING_HOURS.start);
   const endMinutes = parseTimeToMinutes(WORKING_HOURS.end);
@@ -142,6 +171,8 @@ app.get("/", (req, res) => {
 app.get("/api/availability", async (req, res) => {
   try {
     const duration = Number(req.query.duration);
+    const barberId = String(req.query.barberId || "").trim();
+    const barberName = String(req.query.barberName || "").trim();
 
     if (!duration || duration <= 0) {
       return res.status(400).json({
@@ -162,7 +193,7 @@ app.get("/api/availability", async (req, res) => {
       const day = String(d.getDate()).padStart(2, "0");
       const dateStr = `${year}-${month}-${day}`;
 
-      const slots = await getAvailableSlots(dateStr, duration);
+      const slots = await getAvailableSlots(dateStr, duration, barberId, barberName);
 
       if (slots.length > 0) {
         availableDates.push(dateStr);
@@ -186,6 +217,8 @@ app.get("/api/availability/slots", async (req, res) => {
   try {
     const { date } = req.query;
     const duration = Number(req.query.duration);
+    const barberId = String(req.query.barberId || "").trim();
+    const barberName = String(req.query.barberName || "").trim();
 
     if (!date || !isValidDateString(date) || !duration || duration <= 0) {
       return res.status(400).json({
@@ -194,7 +227,7 @@ app.get("/api/availability/slots", async (req, res) => {
       });
     }
 
-    const availableSlots = await getAvailableSlots(date, duration);
+    const availableSlots = await getAvailableSlots(date, duration, barberId, barberName);
 
     return res.json({
       ok: true,
@@ -211,7 +244,19 @@ app.get("/api/availability/slots", async (req, res) => {
 
 app.post("/api/bookings", async (req, res) => {
   try {
-    const { name, phone, service, price, duration, date, time, notes } = req.body;
+    const {
+      name,
+      phone,
+      service,
+      price,
+      duration,
+      barberId,
+      barberName,
+      barberMode,
+      date,
+      time,
+      notes
+    } = req.body;
 
     if (!name || !phone || !service || !price || !duration || !date || !time) {
       return res.status(400).json({
@@ -235,7 +280,7 @@ app.post("/api/bookings", async (req, res) => {
       });
     }
 
-    const freshSlots = await getAvailableSlots(date, numericDuration);
+    const freshSlots = await getAvailableSlots(date, numericDuration, barberId, barberName);
 
     if (!freshSlots.includes(time)) {
       return res.status(409).json({
@@ -265,6 +310,9 @@ app.post("/api/bookings", async (req, res) => {
         `Usługa: ${service}`,
         cleanedPrice ? `Cena: ${cleanedPrice} zł` : null,
         `Czas: ${numericDuration} min`,
+        barberName ? `Barber: ${barberName}` : null,
+        barberId ? `Barber ID: ${barberId}` : null,
+        barberMode ? `Tryb wyboru: ${barberMode}` : null,
         `Data: ${date}`,
         `Godzina: ${time}`,
         notes ? `Uwagi: ${notes}` : null
